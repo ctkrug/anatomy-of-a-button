@@ -15,6 +15,16 @@ import { STAGES, stageAt } from "./stages.js";
 const TILT_X = -24;
 const TILT_Z = -13;
 
+/**
+ * Multiplying a negative constant by a zero envelope yields -0, which breaks
+ * the "progress 0 and 1 are the same frame" identity under Object.is even
+ * though it looks the same. Normalise it away at the source.
+ */
+function scaleBy(value, factor) {
+  const result = value * factor;
+  return result === 0 ? 0 : result;
+}
+
 const TILT_BAND = { start: 0.1, peakStart: 0.34, peakEnd: 0.86, end: 1 };
 const BUTTON_HIDE_BAND = { start: 0.24, peakStart: 0.32, peakEnd: 0.9, end: 0.985 };
 
@@ -88,8 +98,8 @@ export function computeScene(progress, options = {}) {
     stageId: stageAt(p).id,
     promoted,
     deck: {
-      rotateX: TILT_X * tilt,
-      rotateZ: TILT_Z * tilt,
+      rotateX: scaleBy(TILT_X, tilt),
+      rotateZ: scaleBy(TILT_Z, tilt),
       // Pull the deck back slightly as it explodes so the spread layers stay
       // inside the stage instead of growing past its edges.
       scale: lerp(1, 0.82, tilt),
@@ -98,31 +108,36 @@ export function computeScene(progress, options = {}) {
     separation,
     boxLayers: BOX_LAYERS.map((layer) => ({
       ...layer,
-      z: layer.depth * separation.boxModel,
+      z: scaleBy(layer.depth, separation.boxModel),
       opacity: groups.boxModel,
     })),
     paintLayers: PAINT_LAYERS.map((layer) => ({
       ...layer,
-      z: layer.depth * separation.paint,
+      z: scaleBy(layer.depth, separation.paint),
       opacity: groups.paint,
     })),
     compositeLayers: COMPOSITE_LAYERS.map((layer) => ({
       ...layer,
       // Unpromoted, the button shares the document's layer: it sits at the
       // same depth rather than lifting out into a texture of its own.
-      z: (layer.id === "button" && !promoted ? -80 : layer.depth) * separation.composite,
+      z: scaleBy(
+        layer.id === "button" && !promoted ? -80 : layer.depth,
+        separation.composite,
+      ),
       opacity: groups.composite,
     })),
-    annotations: STAGES.map((stage) => ({
+    annotations: STAGES.map((stage, index) => ({
       id: stage.id,
       label: stage.label,
       title: stage.title,
       body: stage.body,
       // Bands are widened past each stage's own range so consecutive
       // annotations crossfade instead of both hitting zero at the boundary.
+      // The first and last stages extend past the sequence ends so the reader
+      // is never left looking at a stage with no copy at progress 0 or 1.
       opacity: fadeBand(p, {
-        start: Math.max(0, stage.range[0] - 0.025),
-        end: Math.min(1, stage.range[1] + 0.025),
+        start: stage.range[0] - (index === 0 ? 0.08 : 0.025),
+        end: stage.range[1] + (index === STAGES.length - 1 ? 0.08 : 0.025),
         fade: 0.035,
       }),
     })),
