@@ -5,6 +5,14 @@
   "type": "module",
   "description": "An interactive, scroll-driven explainer that peels a browser button apart into DOM, box model, paint, and compositing layers.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ctkrug/anatomy-of-a-button.git"
+  },
+  "homepage": "https://github.com/ctkrug/anatomy-of-a-button#readme",
+  "bugs": {
+    "url": "https://github.com/ctkrug/anatomy-of-a-button/issues"
+  },
   "engines": {
     "node": ">=20"
   },
