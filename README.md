@@ -53,6 +53,12 @@ npm run lint     # lint the source
 npm run build    # produce the static production build in dist/
 ```
 
+## Deployment
+
+`npm run build` produces a fully static, self-contained site in `dist/` using only relative
+asset paths, so it can be hosted at a domain root or dropped into a subpath (e.g.
+`apps.charliekrug.com/anatomy-of-a-button`) with no server-side rendering or backend required.
+
 ## Docs
 
 - [`docs/VISION.md`](docs/VISION.md) — problem, audience, core idea, what "v1 done" means.
