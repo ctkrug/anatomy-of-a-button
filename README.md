@@ -1,5 +1,8 @@
 # Anatomy of a Button
 
+[![CI](https://github.com/ctkrug/anatomy-of-a-button/actions/workflows/ci.yml/badge.svg)](https://github.com/ctkrug/anatomy-of-a-button/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 An interactive, scroll-driven explainer that builds a single browser button from first
 principles — DOM, box model, paint, compositing, and GPU layers — peeling each layer apart
 live as you scroll.
