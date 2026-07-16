@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anatomy of a Button</title>
+    <meta
+      name="description"
+      content="An interactive, scroll-driven explainer that peels a browser button apart into DOM, box model, paint, and compositing layers."
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%230a1929'/%3E%3Crect x='6' y='6' width='52' height='52' rx='4' fill='none' stroke='%234fd1e8' stroke-width='2'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='30' font-weight='bold' fill='%234fd1e8' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <main id="app">
+      <section class="hero" id="hero">
+        <p class="hero-eyebrow">// anatomy of a</p>
+        <h1 class="hero-title">Button</h1>
+        <p class="hero-sub">
+          It's just a button. Scroll, and watch what that sentence is hiding.
+        </p>
+        <div class="stage" id="stage" role="img" aria-label="A button, about to be taken apart">
+          <button class="subject-button" id="subject-button" type="button">Click me</button>
+        </div>
+        <p class="scroll-hint" aria-hidden="true">scroll ↓</p>
+      </section>
+    </main>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
