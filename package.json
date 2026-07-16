@@ -1,0 +1,15 @@
+{
+  "name": "anatomy-of-a-button",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "An interactive, scroll-driven explainer that peels a browser button apart into DOM, box model, paint, and compositing layers.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "lint": "eslint ."
+  }
+}
