@@ -5,6 +5,9 @@
   "type": "module",
   "description": "An interactive, scroll-driven explainer that peels a browser button apart into DOM, box model, paint, and compositing layers.",
   "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
