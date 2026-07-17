@@ -68,3 +68,11 @@ This project is an explainer, not a game or playful toy, so the juice/SFX plan (
 apply — there's no win state or synthesized sound design here. The interaction budget instead
 goes entirely into making the scroll-scrubbed transitions between pipeline stages feel precise
 and physically direct, which is this project's equivalent of "game feel."
+
+The **rest and recompose** bookend stages (progress 0 and 1) are the one deliberate exception to
+"the diagram occupies the majority of the screen at every scroll position": the whole narrative
+is "It's just a button [reveal] ...and then it's just a button again," so those two stages show
+the literal, undramatic button rather than a blown-up cutaway — the contrast against the
+dom/box/paint/composite stages (each comfortably >=60vh on desktop) is the point. Verified via a
+real-browser measurement pass at 1440×900: dom/box/paint/composite measure 50-82vh; rest and
+recompose measure ~24vh by design.
