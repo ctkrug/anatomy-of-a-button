@@ -33,4 +33,11 @@ describe("computeProgress", () => {
       computeProgress({ scrollY: 100, sectionTop: 100, sectionHeight: 0, viewportHeight: 0 }),
     ).toBe(0);
   });
+
+  it("returns 0 rather than NaN for a non-finite scrollY", () => {
+    for (const scrollY of [NaN, Infinity, -Infinity]) {
+      const value = computeProgress({ ...base, scrollY });
+      expect(Number.isFinite(value)).toBe(true);
+    }
+  });
 });
