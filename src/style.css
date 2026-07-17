@@ -145,8 +145,14 @@ body {
 }
 
 .deck {
-  --btn-w: 176px;
-  --btn-h: 60px;
+  /* Sized to fill the stage (docs/DESIGN.md: hero >=60vh on desktop), not to
+     look like a literal button — this is a magnified cutaway, and a
+     blueprint is drawn bigger than its subject. 176/60 is the reference
+     aspect ratio the box-model/paint/composite offsets below were tuned
+     against; --explode-scale carries that same growth into their spread. */
+  --btn-w: clamp(220px, 34vw, 560px);
+  --btn-h: clamp(75px, 11.6vw, 191px);
+  --explode-scale: calc(var(--btn-w) / 176px);
   position: relative;
   width: var(--btn-w);
   height: var(--btn-h);
