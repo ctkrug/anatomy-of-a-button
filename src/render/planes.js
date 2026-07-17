@@ -9,13 +9,11 @@
 /**
  * Per-layer contents. Each paint plane draws only its own contribution, so
  * the stack really does composite back into the button rather than being four
- * copies of it.
+ * copies of it — which leaves the text layer as the only one with anything to
+ * write. Every other paint layer is drawn purely by its CSS face.
  */
 const PAINT_CONTENT = {
-  shadow: () => "",
-  background: () => "",
-  border: () => "",
-  text: () => "Click me",
+  text: "Click me",
 };
 
 function labelFor(layer) {
@@ -53,7 +51,7 @@ export function createPlane(layer, kind) {
   const face = document.createElement("div");
   face.className = "plane-face";
   if (kind === "paint") {
-    face.textContent = (PAINT_CONTENT[layer.id] ?? (() => ""))();
+    face.textContent = PAINT_CONTENT[layer.id] ?? "";
   }
   plane.appendChild(face);
   plane.appendChild(labelFor(layer));
