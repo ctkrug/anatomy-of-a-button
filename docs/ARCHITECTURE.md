@@ -107,6 +107,9 @@ has no memory of direction, so scrolling up produces exactly the frames scrollin
 - `npm test` — `vitest run`, the full suite (pure logic + jsdom-based renderer/main tests).
 - `npm run coverage` — `vitest run --coverage` (v8 provider); core logic and render modules run
   at 100% line and function coverage.
+- `npm run test:e2e` — `playwright test` (`test/e2e/`, `playwright.config.js`); real-Chromium
+  geometry checks for CSS 3D-transform behavior jsdom can't lay out. Builds and serves `dist/`
+  first, so it's checking the actual production output, not the dev server.
 - `npm run lint` — ESLint over `src/` and `test/`.
 - `npm run build` — static production build into `dist/`, relative-path (`base: "./"`) so it's
   deployable to a subpath (`apps.charliekrug.com/anatomy-of-a-button`) with no server.
@@ -122,7 +125,11 @@ container, a CSS shorthand like `inset` silently resetting longhands declared ea
 same rule, or plane labels overlapping because they're too close together in a small box) —
 those were caught across three runs via a real headless-Chromium pass (Playwright) across
 390/768/1440 at every pipeline stage, not by the test suite. Any future layout-sensitive change
-should get the same real-browser check, not just `npm test` — this run in particular found a
-grid auto-placement bug, a self-referencing custom property that silently no-opped, and two
-distinct off-screen label clipping bugs, none of which a passing test suite or a `scrollWidth`
-overflow check surfaced; only rendered screenshots did.
+should get the same real-browser check, not just `npm test` — across the runs so far this has
+found a grid auto-placement bug, a self-referencing custom property that silently no-opped, three
+distinct off-screen label/plane clipping bugs, and a promoted composite layer magnified ~2.6x
+past a 1400px `perspective` and pushed entirely off screen, none of which a passing test suite or
+a `scrollWidth` overflow check surfaced; only rendered screenshots did. `npm run test:e2e`
+(`test/e2e/`) now codifies the composite-geometry case permanently so it can't silently regress
+again, but it is not a substitute for a fresh manual pass on a genuinely new layout change — it
+only re-checks the specific geometry it was written against.
