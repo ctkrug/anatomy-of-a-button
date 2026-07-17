@@ -80,6 +80,19 @@ has no memory of direction, so scrolling up produces exactly the frames scrollin
   It must be a separate custom property: `--explode-scale: calc(var(--explode-scale) * n)` on a
   descendant is a self-reference per the custom-properties spec (guaranteed-invalid, silently
   falls back to the `var()` default) even though it reads like a harmless per-element override.
+  `--explode-boost` multiplies a real `translate3d` z, though, so it's bounded by `.scene`'s
+  1400px `perspective` — a rejected CLOSEOUT found the composite group's old `3.0` sent the
+  *promoted* button layer's z to ~864px (magnified ~2.6x), pushing it below a 900px viewport
+  entirely. It's now `1.3125` (105/80: parity with box/paint's own proven-safe max depth), and
+  `test/style-guard.test.js` asserts the boost/scale product never exceeds a safe magnification
+  again. Because that cap is deliberately conservative, the composite labels' own `top: calc(50%
+  ± Npx)` offset uses a *larger*, independently-tuned base (65px, vs. box/paint's 24px) so the
+  group still reads with visual weight — the label offset is a plain 2D position, not a
+  perspective-projected `translate3d`, so it can carry weight the z-boost no longer safely can.
+  A phone-width (`max-width: 599px`) override halves that base further: the composite stage's
+  annotation copy is the sequence's longest, and since `.stage`'s flex column centers as one
+  group, that pushes `.scene` higher on narrow viewports than any other stage, leaving less
+  headroom before the label's top edge hits `.stage`'s own `overflow: hidden`.
   Below 1024px, `.scene` and `.annotations` stack in normal flow instead of sitting in separate
   grid columns; `.scene`'s own layout box is only the deck's small footprint, so it gets a
   `margin-bottom` scaled by `--explode-scale` to clear the exploded planes that visually overflow
