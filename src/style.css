@@ -335,6 +335,18 @@ body {
   box-shadow: 0 0 18px rgba(79, 209, 232, 0.4);
 }
 
+/* Unpromoted, the button shares the document's z depth (deliberately — see
+   scene.js), which would otherwise stack both labels illegibly on top of
+   each other; offsetting them vertically keeps both readable regardless of
+   how close the planes themselves sit. */
+.plane-group-composite [data-layer="document"] .plane-label {
+  top: 30%;
+}
+
+.plane-group-composite [data-layer="button"] .plane-label {
+  top: 70%;
+}
+
 /*
  * The DOM-tree plane is far bigger than the button-sized deck it's parented
  * to, so it overrides .plane-group's inset: 0 to sit above the deck instead
@@ -408,12 +420,15 @@ body {
   position: relative;
   z-index: 2;
   width: min(46ch, 100%);
-  min-height: 9.5rem;
+  /* Every .annotation shares grid area 1/1, so the single implicit cell
+     auto-sizes to the tallest stage's copy while the figures still overlap
+     for the crossfade below — a fixed min-height would either clip the
+     longest stage's body or leave dead space under the shortest. */
+  display: grid;
 }
 
 .annotation {
-  position: absolute;
-  inset: 0;
+  grid-area: 1 / 1;
   margin: 0;
   display: flex;
   flex-direction: column;
