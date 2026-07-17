@@ -17,16 +17,40 @@
   </head>
   <body>
     <main id="app">
-      <section class="hero" id="hero">
-        <p class="hero-eyebrow">// anatomy of a</p>
-        <h1 class="hero-title">Button</h1>
-        <p class="hero-sub">
-          It's just a button. Scroll, and watch what that sentence is hiding.
-        </p>
-        <div class="stage" id="stage" role="img" aria-label="A button, about to be taken apart">
-          <button class="subject-button" id="subject-button" type="button">Click me</button>
+      <section class="sequence" id="sequence">
+        <div
+          class="stage"
+          id="stage"
+          role="img"
+          aria-label="A button, taken apart into its DOM node, box model, paint layers, and compositing layers, then reassembled"
+        >
+          <div class="hero-copy" data-hero-copy>
+            <p class="hero-eyebrow">// anatomy of a</p>
+            <h1 class="hero-title">Button</h1>
+            <p class="hero-sub">
+              It's just a button. Scroll, and watch what that sentence is hiding.
+            </p>
+            <p class="scroll-hint" aria-hidden="true">scroll ↓</p>
+          </div>
+
+          <div class="scene">
+            <div class="deck" data-deck>
+              <button class="subject-button" data-subject type="button">Click me</button>
+            </div>
+          </div>
+
+          <div class="annotations" data-annotations></div>
+
+          <button
+            class="promote-toggle"
+            data-promote-toggle
+            type="button"
+            aria-pressed="false"
+          >
+            <span class="promote-toggle-swatch" aria-hidden="true"></span>
+            promote to its own GPU layer
+          </button>
         </div>
-        <p class="scroll-hint" aria-hidden="true">scroll ↓</p>
       </section>
     </main>
     <script type="module" src="./src/main.js"></script>
