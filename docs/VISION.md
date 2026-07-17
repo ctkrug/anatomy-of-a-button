@@ -1,5 +1,26 @@
 # Vision
 
+## Name and positioning
+
+The product ships as **Cutaway**, tagline **"See the render pipeline inside one button."**
+
+*Cutaway* is the term technical illustrators use for a drawing that opens an object up to show
+its internals, which is literally what this page does to a `<button>`. It was chosen over the
+descriptive working title ("Anatomy of a Button") because that title only restates the repo
+slug, and over coined alternatives because the real word already carries the meaning and suits
+the blueprint direction in `docs/DESIGN.md`.
+
+The audience is narrower than "web developers": front-end developers who write `<button>` every
+day and have never watched what the browser does with it. The specific pain is that the render
+pipeline is taught as prose and as boxes-and-arrows diagrams, so you can read "layout, paint,
+composite" a dozen times and still have no picture attached to it. The single benefit every
+headline leads with is that you watch one real button come apart into every stage, at your own
+scroll speed.
+
+The wordmark and the piece's own title are deliberately different things: Cutaway is the
+product, "// anatomy of a Button" is the headline of this piece, the way a publication name and
+an article title coexist. Both sit in one visual language.
+
 ## The problem
 
 Every web developer has typed `<button>Click me</button>` and moved on. What that one line
