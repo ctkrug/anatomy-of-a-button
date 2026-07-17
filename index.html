@@ -18,12 +18,7 @@
   <body>
     <main id="app">
       <section class="sequence" id="sequence">
-        <div
-          class="stage"
-          id="stage"
-          role="img"
-          aria-label="A button, taken apart into its DOM node, box model, paint layers, and compositing layers, then reassembled"
-        >
+        <div class="stage" id="stage">
           <div class="hero-copy" data-hero-copy>
             <p class="hero-eyebrow">// anatomy of a</p>
             <h1 class="hero-title">Button</h1>
@@ -33,7 +28,11 @@
             <p class="scroll-hint" aria-hidden="true">scroll ↓</p>
           </div>
 
-          <div class="scene">
+          <div
+            class="scene"
+            role="img"
+            aria-label="A button, taken apart into its DOM node, box model, paint layers, and compositing layers, then reassembled"
+          >
             <div class="deck" data-deck>
               <button class="subject-button" data-subject type="button">Click me</button>
             </div>
