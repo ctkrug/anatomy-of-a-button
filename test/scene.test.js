@@ -247,4 +247,11 @@ describe("computeScene — malformed input", () => {
   it("tolerates a missing options argument", () => {
     expect(() => computeScene(0.5)).not.toThrow();
   });
+
+  it("tolerates an explicit null options argument", () => {
+    // Default parameters only kick in for `undefined`, not `null` — a
+    // caller passing through a nullable config value shouldn't crash it.
+    expect(() => computeScene(0.5, null)).not.toThrow();
+    expect(computeScene(0.5, null).promoted).toBe(false);
+  });
 });
