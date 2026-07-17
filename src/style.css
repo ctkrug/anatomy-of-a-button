@@ -241,7 +241,15 @@ body {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
-  transform: translate3d(var(--expand-x, 0px), var(--expand-y, 0px), var(--z, 0px));
+  /* expand-x/expand-y/z are tuned against the 176px reference button
+     (scene.js); multiplying by --explode-scale keeps the box-model/paint/
+     composite separation proportional as the deck grows past that size,
+     instead of the same fixed-pixel gap shrinking into a rounding error. */
+  transform: translate3d(
+    calc(var(--expand-x, 0px) * var(--explode-scale, 1)),
+    calc(var(--expand-y, 0px) * var(--explode-scale, 1)),
+    calc(var(--z, 0px) * var(--explode-scale, 1))
+  );
 }
 
 .plane-face {
