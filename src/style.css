@@ -512,13 +512,22 @@ body {
 /* Unpromoted, the button shares the document's z depth (deliberately — see
    scene.js), which would otherwise stack both labels illegibly on top of
    each other; offsetting them vertically keeps both readable regardless of
-   how close the planes themselves sit. */
+   how close the planes themselves sit. 65px (not the 24px box/paint labels
+   use) is a separate lever from --explode-boost above: it's what makes this
+   group still read with real visual weight now that --explode-boost had to
+   drop to a value safe for the actual z-translate. Chosen empirically
+   against a real 1440x900 render (Playwright) as the largest value that
+   still keeps both labels' top edge clear of .stage's own overflow: hidden
+   boundary across the whole composite peak-separation range — pushing it
+   further reads bigger but starts clipping the "document layer" label off
+   the top of the viewport, the same class of bug this whole group was
+   rejected for, just on the label instead of the plane. */
 .plane-group-composite [data-layer="document"] .plane-label {
-  top: calc(50% - (24px * var(--explode-scale, 1) * var(--explode-boost, 1)));
+  top: calc(50% - (65px * var(--explode-scale, 1) * var(--explode-boost, 1)));
 }
 
 .plane-group-composite [data-layer="button"] .plane-label {
-  top: calc(50% + (24px * var(--explode-scale, 1) * var(--explode-boost, 1)));
+  top: calc(50% + (65px * var(--explode-scale, 1) * var(--explode-boost, 1)));
 }
 
 /*
