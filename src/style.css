@@ -634,14 +634,19 @@ body {
     justify-self: center;
   }
 
-  .annotations {
+  /*
+   * .annotations and .promote-toggle are wrapped in .stage-aside (rather
+   * than placed as two separate column-2 grid items) so column 2 is a
+   * single grid cell: with no explicit grid-row, two independent items in
+   * the same column would auto-place onto separate implicit rows, which
+   * left .scene's row shorter than the annotations+toggle stack and its
+   * vertical center off the true stage middle.
+   */
+  .stage-aside {
     grid-column: 2;
-    justify-self: start;
-  }
-
-  .promote-toggle {
-    grid-column: 2;
-    justify-self: start;
-    margin-top: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
   }
 }
