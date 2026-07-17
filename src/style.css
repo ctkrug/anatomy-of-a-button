@@ -893,6 +893,21 @@ body {
   .stage {
     padding-top: calc(var(--space-8) + var(--space-6));
   }
+
+  /* The composite stage's annotation copy is the longest in the sequence;
+     since .stage's flex column centers as one group, that extra text height
+     pushes .scene higher than it sits for any other stage, leaving less
+     headroom above the deck. Left at the desktop offset, the "document
+     layer" label's top edge lands above y:0 and is clipped by .stage's own
+     overflow: hidden (confirmed via a real 390x844 render). Halving it here
+     keeps the label on-screen without touching the desktop/tablet reading. */
+  .plane-group-composite [data-layer="document"] .plane-label {
+    top: calc(50% - (32px * var(--explode-scale, 1) * var(--explode-boost, 1)));
+  }
+
+  .plane-group-composite [data-layer="button"] .plane-label {
+    top: calc(50% + (32px * var(--explode-scale, 1) * var(--explode-boost, 1)));
+  }
 }
 
 @media (min-width: 600px) and (max-width: 1023px) {
