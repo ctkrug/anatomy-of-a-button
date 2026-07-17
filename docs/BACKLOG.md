@@ -85,3 +85,43 @@ criteria — a later run should be able to check each one true/false without gue
     (§D2 of the design standard) anywhere in the sequence.
   - The favicon, wordmark, and blueprint grid treatment are present and consistent across the
     entire page, not just the hero section.
+
+## Epic 5 — Closeout blockers (composite stage geometry)
+
+All three stories below share one root cause: `--explode-boost: 3.0` on
+`.plane-group-composite` in `src/style.css`. The boost was added so the *unpromoted* composite
+group (whose two layers share a z depth by design, see `scene.js`) would not read flatter than
+the box-model and paint stages. But it multiplies the `±80px` composite depth by
+`--explode-scale` (3.6 at 1440px) *and* by itself, giving ~864px of z-translation against
+`perspective: 1400px`. That is a ~2.6x perspective magnification, which is what throws the
+promoted layer out of the stage and the labels off the top edge at narrow widths.
+
+Measured at 1440x900 in Chromium, composite stage, promote ON, varying only the boost:
+
+| boost | promoted button layer | fully on screen | group height |
+|---|---|---|---|
+| 3.0 (current) | y 1033 to 1480 | no | 165.6vh |
+| 2.0 | y 638 to 1009 | no | 101.9vh |
+| 1.5 | y 523 to 861 | yes | 79.8vh |
+| 1.0 | y 436 to 745 | yes | 60.5vh |
+
+- [ ] **5.1 — The promote toggle must lift the button layer, not delete it.** At 1440x900,
+      clicking "promote to its own GPU layer" currently translates the button layer to
+      y 1033..1480 in a 900px viewport, where `.stage`'s `overflow: hidden` clips it entirely.
+      The layer disappears, which teaches the exact opposite of the annotation copy.
+  - With promote ON at 1440x900, the button layer's bounding box is fully inside the viewport.
+  - Toggling promote ON visibly *separates* the two composite layers rather than removing one.
+  - The document layer keeps its stroke and both plane labels stay legible in both states.
+- [ ] **5.2 — The composite stage must clear the hero-fill floor in its default state.**
+      Unpromoted (the state the reader lands in) the group measures 34.2vh at 1440x900, under
+      the >=60vh floor in the design standard and `docs/DESIGN.md`'s own layout intent.
+  - The composite group measures >=60vh at 1440x900 with promote OFF.
+  - It does so without pushing the promoted state off screen (see 5.1); a boost near 1.5
+      satisfies both.
+- [ ] **5.3 — No composite clipping at tablet and phone.** At 768x1024 the "document layer"
+      label sits at y -19, and at 390x844 the document plane sits at y -15 with its label fully
+      off screen at y -78..-29. The reader loses a label entirely, and at 390px the diagram also
+      rides up under the fixed `.site-header`.
+  - At 390x844 and 768x1024, every composite plane and label is fully inside the viewport
+    across the whole composite band, with promote OFF and ON.
+  - The composite diagram does not overlap the site header at any width.
