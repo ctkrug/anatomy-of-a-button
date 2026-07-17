@@ -328,3 +328,67 @@ body {
   border: 2px solid var(--accent);
   box-shadow: 0 0 18px rgba(79, 209, 232, 0.4);
 }
+
+/*
+ * The DOM-tree plane is far bigger than the button-sized deck it's parented
+ * to, so it overrides .plane-group's inset: 0 to sit above the deck instead
+ * of stretching to match it.
+ */
+.plane-group-tree {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  inset: auto;
+  transform: translate3d(-50%, calc(-1 * var(--space-4)), 0);
+  width: min(420px, 84vw);
+}
+
+.dom-tree {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.dom-tree-edge {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+}
+
+.dom-tree-node rect {
+  fill: var(--surface-1);
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.dom-tree-node text {
+  fill: var(--text-muted);
+  font-family: var(--font-ui);
+  font-size: 12px;
+}
+
+.dom-tree-node.is-subject rect {
+  fill: var(--surface-2);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.dom-tree-node.is-subject text {
+  fill: var(--text);
+  font-weight: 500;
+}
+
+.dom-tree-drop {
+  fill: none;
+  stroke: var(--accent-support);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+
+.dom-tree-callout {
+  fill: var(--accent-support);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-style: italic;
+}
