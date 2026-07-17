@@ -53,7 +53,8 @@ the button returns to rest with no reset step.
   planes, which makes the compositing section genuinely composited rather than a simulation
   of one.
 - [Vite](https://vitejs.dev/) for the dev server and the static build.
-- [Vitest](https://vitest.dev/) for unit tests, [ESLint](https://eslint.org/) for linting.
+- [Vitest](https://vitest.dev/) for unit tests, [Playwright](https://playwright.dev/) for
+  real-browser geometry checks, [ESLint](https://eslint.org/) for linting.
 
 ## Development
 
@@ -62,6 +63,7 @@ npm install
 npm run dev       # local dev server
 npm test          # run the test suite
 npm run coverage  # run the suite with a coverage report
+npm run test:e2e  # real-browser checks (Playwright) for CSS 3D-transform geometry
 npm run lint      # lint the source
 npm run build     # produce the static production build in dist/
 ```
