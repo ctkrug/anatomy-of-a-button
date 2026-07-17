@@ -441,3 +441,73 @@ body {
   line-height: 1.6;
   color: var(--text-muted);
 }
+
+/*
+ * The GPU-layer promote toggle (backlog 2.2): only relevant during the
+ * compositing stage, so it's hidden the rest of the sequence rather than
+ * sitting idle and unexplained.
+ */
+.promote-toggle {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-1) var(--space-3);
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--surface-1);
+  border: 1px solid var(--text-muted);
+  border-radius: var(--radius);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity var(--motion-ui),
+    color var(--motion-ui),
+    background var(--motion-ui),
+    border-color var(--motion-ui);
+}
+
+.stage[data-stage="composite"] .promote-toggle {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.promote-toggle-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--text-muted);
+  transition:
+    background var(--motion-ui),
+    box-shadow var(--motion-ui);
+}
+
+.promote-toggle:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.promote-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.promote-toggle:active {
+  transform: translateY(1px);
+}
+
+.promote-toggle[aria-pressed="true"] {
+  color: var(--text);
+  background: rgba(79, 209, 232, 0.08);
+  border-color: var(--accent);
+}
+
+.promote-toggle[aria-pressed="true"] .promote-toggle-swatch {
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(79, 209, 232, 0.7);
+}
