@@ -39,7 +39,7 @@ export const STAGES = [
     label: "04 · composite",
     range: [0.7, 0.88],
     title: "Then, it's a texture on the GPU.",
-    body: "Those drawings get rasterised into layers and handed to the compositor. Most elements share one layer. Give an element a transform, an opacity animation, or will-change, and the browser may promote it to a layer of its own — which it can then move on the GPU without repainting anything.",
+    body: "Those drawings get rasterised into layers and handed to the compositor. Most elements share one layer. Give an element a transform, an opacity animation, or will-change, and the browser may promote it to a layer of its own — which it can then move on the GPU without repainting anything. The benefit is cheap, jank-free motion; the cost is a GPU-resident texture per promoted layer, so promoting too many elements ('layer explosion') can burn more memory than the repaints it was meant to avoid.",
   },
   {
     id: "recompose",
