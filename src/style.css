@@ -354,9 +354,11 @@ body {
  */
 .plane-group-tree {
   position: absolute;
+  /* inset must come first: it's a shorthand for all four sides, so setting
+     it after left/bottom would silently reset them back to auto. */
+  inset: auto;
   left: 50%;
   bottom: 100%;
-  inset: auto;
   transform: translate3d(-50%, calc(-1 * var(--space-4)), 0);
   width: min(420px, 78vw);
 }
