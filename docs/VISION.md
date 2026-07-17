@@ -50,9 +50,12 @@ scrolled" and "how deep into the rendering pipeline you are" is direct and physi
 - **Scroll-scrubbed, not animation-timed.** Every visual transition is a pure function of
   scroll progress (see `src/scroll/progress.js`), not a timer. Scrolling up must reverse the
   exact animation that scrolling down played, with no replay lag.
-- **SVG for structure, Canvas where layer compositing needs raw pixel/blend control.** The DOM
-  tree and box model are DOM-adjacent structural diagrams (SVG suits this); the paint/composite
-  sections are about layered raster surfaces (Canvas suits this).
+- **SVG for structure, CSS 3D transforms for every exploded layer.** The DOM tree is a
+  DOM-adjacent structural diagram (SVG suits this). Box-model/paint/composite layers turned out
+  not to need Canvas: `translate3d`/`rotateX`/`rotateZ` planes are real, independently
+  GPU-composited layers driven by scroll-scrubbed custom properties — which is more honest to
+  the compositing section's own subject matter than simulating layers on a raster canvas would
+  be, and keeps every frame a style write with no per-frame redraw logic of its own.
 - **No framework.** A framework's own virtual-DOM/render pipeline would sit awkwardly under a
   project that's explicitly about demystifying render pipelines. Vanilla JS keeps the metaphor
   honest and the bundle small.

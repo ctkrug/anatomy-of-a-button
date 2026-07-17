@@ -20,16 +20,17 @@ expands into 3D, paint layers separate and float like an exploded-parts diagram,
 composite back into the boring gray button you started with. That's the moment this whole
 project is built toward.
 
-## Planned features
+## Features
 
-- A pinned scrollytelling stage where scroll position drives an SVG/Canvas rendering pipeline
-  diagram, not just fades and slides.
+- A pinned scrollytelling stage where scroll position drives the entire rendering-pipeline
+  diagram — reversibly, with no timers and no jump cuts between stages.
 - A box-model breakdown (content, padding, border, margin) that expands into an exploded 3D-ish
   view as you scroll into that section.
 - A paint-layer separation sequence: background, border, text, and box-shadow shown as distinct
   painted layers before they recombine.
-- A compositing / GPU-layer section that shows why `transform`/`opacity`/`will-change` promote
-  an element to its own layer, and what that costs and buys you.
+- A compositing / GPU-layer section with a toggle comparing the promoted vs. unpromoted button,
+  explaining both what `transform`/`opacity`/`will-change` promotion costs and what it buys you.
+- A DOM-tree diagram revealing the button's parent/sibling structure before the box-model stage.
 - Scroll-scrubbed annotations (blueprint-style callouts) that explain each stage in plain
   language alongside the diagram.
 - A fully static, self-contained build with no server dependency, deployable to a subpath.
@@ -38,7 +39,9 @@ project is built toward.
 
 - Vanilla JavaScript (ES modules) — no framework, so the rendering-pipeline metaphor isn't
   buried under a framework's own rendering pipeline.
-- SVG for the structural/box-model diagrams, Canvas for layer-compositing visuals.
+- SVG for the DOM-tree structural diagram; CSS 3D transforms (`translate3d`/`rotateX`/`rotateZ`)
+  for the box-model/paint/compositor plane separation — genuinely GPU-composited layers, which
+  fits the compositing section's own subject matter better than a Canvas simulation would.
 - [Vite](https://vitejs.dev/) for the dev server and static production build.
 - [Vitest](https://vitest.dev/) for unit tests.
 - ESLint for linting.
