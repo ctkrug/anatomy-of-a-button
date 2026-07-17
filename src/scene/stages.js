@@ -50,11 +50,6 @@ export const STAGES = [
   },
 ];
 
-/** Look up a stage definition by id. Returns undefined for an unknown id. */
-export function getStage(id) {
-  return STAGES.find((stage) => stage.id === id);
-}
-
 /**
  * The stage whose range contains this progress. Ranges are half-open
  * [start, end) so a boundary belongs to exactly one stage; progress 1 resolves

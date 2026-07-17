@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getStage, STAGES, stageAt } from "../src/scene/stages.js";
+import { STAGES, stageAt } from "../src/scene/stages.js";
 
 describe("STAGES data", () => {
   it("covers the pipeline the vision promises, in order", () => {
@@ -48,17 +48,6 @@ describe("STAGES data", () => {
     for (const stage of STAGES) {
       expect(`${stage.label} ${stage.title} ${stage.body}`).not.toMatch(banned);
     }
-  });
-});
-
-describe("getStage", () => {
-  it("finds a stage by id", () => {
-    expect(getStage("paint").title).toBe("Then, it's a stack of drawings.");
-  });
-
-  it("returns undefined for an unknown id rather than throwing", () => {
-    expect(getStage("nope")).toBeUndefined();
-    expect(getStage("")).toBeUndefined();
   });
 });
 
