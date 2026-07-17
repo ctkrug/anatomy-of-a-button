@@ -18,7 +18,7 @@ const HIDE_THRESHOLD = 0.001;
 function requireElement(root, selector) {
   const found = root.querySelector(selector);
   if (!found) {
-    throw new Error(`Anatomy of a Button: required element "${selector}" is missing`);
+    throw new Error(`Cutaway: required element "${selector}" is missing`);
   }
   return found;
 }
@@ -56,7 +56,7 @@ function createAnnotations(container) {
  * @returns {{render: (scene: object) => void}}
  */
 export function mount(root) {
-  if (!root) throw new Error("Anatomy of a Button: mount() needs a stage element");
+  if (!root) throw new Error("Cutaway: mount() needs a stage element");
 
   const deck = requireElement(root, "[data-deck]");
   const annotationHost = requireElement(root, "[data-annotations]");
