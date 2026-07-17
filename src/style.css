@@ -212,3 +212,119 @@ body {
     transform: translateY(6px);
   }
 }
+
+/*
+ * Plane groups: one absolutely-positioned layer per box-model box, paint
+ * operation, and compositor layer, built once by createPlaneGroup() and
+ * driven per frame by the renderer writing --z and group opacity. No
+ * transition on any of it — same reasoning as .deck above.
+ */
+.plane-group {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.plane {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: translate3d(var(--expand-x, 0px), var(--expand-y, 0px), var(--z, 0px));
+}
+
+.plane-face {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.plane-label {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.plane-label-name {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--accent-support);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.plane-label-note {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Box model: outermost (margin) drawn first so nearer boxes paint over it. */
+.plane-group-box [data-layer="margin"] .plane-face {
+  background: transparent;
+  border: 1px dashed var(--accent-support);
+}
+
+.plane-group-box [data-layer="border"] .plane-face {
+  background: rgba(79, 209, 232, 0.05);
+  border: 2px solid var(--accent);
+}
+
+.plane-group-box [data-layer="padding"] .plane-face {
+  background: rgba(22, 50, 74, 0.75);
+  border: 1px solid var(--text-muted);
+}
+
+.plane-group-box [data-layer="content"] .plane-face {
+  background: var(--surface-2);
+  border: 1px solid var(--accent);
+}
+
+/* Paint: the spec's own draw order, back to front. */
+.plane-group-paint [data-layer="shadow"] .plane-face {
+  background: transparent;
+  border: 1px dashed var(--text-muted);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+}
+
+.plane-group-paint [data-layer="background"] .plane-face {
+  background: var(--surface-2);
+  border: none;
+}
+
+.plane-group-paint [data-layer="border"] .plane-face {
+  background: transparent;
+  border: 1px solid var(--text);
+}
+
+.plane-group-paint [data-layer="text"] .plane-face {
+  background: transparent;
+  border: none;
+}
+
+/* Compositing: the unpromoted button shares the document's layer (flatter,
+   dimmer); promoted, it reads as its own lit GPU texture. */
+.plane-group-composite [data-layer="document"] .plane-face {
+  background: var(--surface-1);
+  border: 1px solid var(--text-muted);
+}
+
+.plane-group-composite [data-layer="button"] .plane-face {
+  background: var(--surface-2);
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 18px rgba(79, 209, 232, 0.4);
+}
