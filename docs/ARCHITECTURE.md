@@ -63,7 +63,30 @@ has no memory of direction, so scrolling up produces exactly the frames scrollin
   (600vh) track; no ancestor of `.stage` may set `overflow-x` without also being the document
   root, or it silently breaks the sticky pin (see the comment above `#app` in style.css); the
   `.annotations` children all share one CSS Grid area so the container auto-sizes to the
-  tallest stage's copy while the figures still crossfade in place.
+  tallest stage's copy while the figures still crossfade in place. `.annotations` and
+  `.promote-toggle` are wrapped in `.stage-aside` (index.html) rather than placed as two
+  independent grid items — two column-2 items with no `grid-row` set auto-place onto separate
+  implicit rows, which pulls `.scene`'s vertical center off the true stage middle.
+- **Hero sizing (`--explode-scale`/`--explode-boost`)** — `.stage` declares `--btn-w`/`--btn-h`
+  as viewport-relative `clamp()`s (not `.deck`, so both `.deck` and `.scene`'s own responsive
+  margin can read them — a custom property only cascades to descendants) and derives
+  `--explode-scale: calc(var(--btn-w) / 176px)`, 176px being the original literal-button
+  reference size every box-model/paint/composite offset in `scene.js` was tuned against. `.plane`
+  multiplies `--expand-x`/`--expand-y`/`--z` by `--explode-scale`, and every per-layer label's
+  `top: calc(50% ± Npx)` offset multiplies by it too, so layer separation grows with the deck
+  instead of shrinking to a rounding error at hero size. `--explode-boost` (default 1) is a
+  *second*, group-scoped multiplier — the composite group needs one because unpromoted its two
+  layers sit at the same z depth by design (no separation to scale via `--explode-scale` alone).
+  It must be a separate custom property: `--explode-scale: calc(var(--explode-scale) * n)` on a
+  descendant is a self-reference per the custom-properties spec (guaranteed-invalid, silently
+  falls back to the `var()` default) even though it reads like a harmless per-element override.
+  Below 1024px, `.scene` and `.annotations` stack in normal flow instead of sitting in separate
+  grid columns; `.scene`'s own layout box is only the deck's small footprint, so it gets a
+  `margin-bottom` scaled by `--explode-scale` to clear the exploded planes that visually overflow
+  past it. `.scene` also scales down as a unit below 1024px (two tiers: phone/tablet), and below
+  1024px `.plane-label` wraps rather than staying `nowrap` — a fixed-width label that's fine at
+  desktop can run past a narrow viewport's edge and get silently clipped by `.stage`'s
+  `overflow: hidden` (no scrollbar, so nothing but a real screenshot catches it).
 
 ## How to run
 
@@ -84,6 +107,9 @@ jsdom does not perform real layout, so it cannot catch layout-only bugs (e.g. an
 `overflow-x` silently breaking `position: sticky`, content overflowing a fixed-height
 container, a CSS shorthand like `inset` silently resetting longhands declared earlier in the
 same rule, or plane labels overlapping because they're too close together in a small box) —
-those were caught across two runs via a real headless-Chromium pass (Playwright) across
+those were caught across three runs via a real headless-Chromium pass (Playwright) across
 390/768/1440 at every pipeline stage, not by the test suite. Any future layout-sensitive change
-should get the same real-browser check, not just `npm test`.
+should get the same real-browser check, not just `npm test` — this run in particular found a
+grid auto-placement bug, a self-referencing custom property that silently no-opped, and two
+distinct off-screen label clipping bugs, none of which a passing test suite or a `scrollWidth`
+overflow check surfaced; only rendered screenshots did.
