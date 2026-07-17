@@ -26,12 +26,6 @@ export function easeInOutCubic(t) {
   return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 }
 
-/** Gentle deceleration — the default for a value settling into place. */
-export function easeOutCubic(t) {
-  const x = clamp(t);
-  return 1 - Math.pow(1 - x, 3);
-}
-
 /**
  * A 0 → 1 → 0 hump: ramps up over [start, peakStart], holds at 1 across the
  * plateau, then ramps back down over [peakEnd, end]. This is what makes the

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clamp, easeInOutCubic, easeOutCubic, envelope, fadeBand, lerp } from "../src/scene/easing.js";
+import { clamp, easeInOutCubic, envelope, fadeBand, lerp } from "../src/scene/easing.js";
 
 describe("clamp", () => {
   it("passes through values inside the range", () => {
@@ -61,26 +61,6 @@ describe("easeInOutCubic", () => {
       expect(value).toBeGreaterThanOrEqual(previous - 1e-9);
       expect(value).toBeGreaterThanOrEqual(0);
       expect(value).toBeLessThanOrEqual(1);
-      previous = value;
-    }
-  });
-});
-
-describe("easeOutCubic", () => {
-  it("pins the endpoints", () => {
-    expect(easeOutCubic(0)).toBe(0);
-    expect(easeOutCubic(1)).toBe(1);
-  });
-
-  it("decelerates: it is ahead of linear through the middle", () => {
-    expect(easeOutCubic(0.5)).toBeGreaterThan(0.5);
-  });
-
-  it("is monotonically non-decreasing", () => {
-    let previous = -1;
-    for (let t = 0; t <= 1; t += 0.01) {
-      const value = easeOutCubic(t);
-      expect(value).toBeGreaterThanOrEqual(previous - 1e-9);
       previous = value;
     }
   });
