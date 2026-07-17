@@ -71,7 +71,107 @@
           </div>
         </div>
       </section>
+
+      <section class="explainer">
+        <div class="explainer-inner">
+          <h2 class="explainer-title">What you just scrolled through</h2>
+          <p class="explainer-lede">
+            Cutaway pulls one HTML button through the four stages a browser runs to get it
+            on screen. The grey rectangle at the top of this page is a real, focusable
+            <code>&lt;button&gt;</code>, not a picture of one, and every plane that
+            separates out of it is measured from that same element.
+          </p>
+
+          <ol class="stage-list">
+            <li>
+              <p class="stage-list-label">01 · structure</p>
+              <p class="stage-list-body">
+                The parser turns markup into a tree before anything is drawn. The button
+                starts as one node among its parents and siblings, which is the only
+                reason a selector like <code>.toolbar &gt; button</code> can find it.
+              </p>
+            </li>
+            <li>
+              <p class="stage-list-label">02 · layout</p>
+              <p class="stage-list-body">
+                Layout resolves that node into four nested rectangles: content, padding,
+                border, margin. They pull apart in 3D so you can see that the space a
+                button claims on the page is bigger than the rectangle it paints.
+              </p>
+            </li>
+            <li>
+              <p class="stage-list-label">03 · paint</p>
+              <p class="stage-list-body">
+                Painting produces an ordered list of drawing operations rather than a
+                button: shadow, background, border, then text. They float apart in spec
+                order, which is why a background can never cover its own text.
+              </p>
+            </li>
+            <li>
+              <p class="stage-list-label">04 · composite</p>
+              <p class="stage-list-body">
+                Those drawings are rasterised into layers and handed to the compositor.
+                Flip the promote toggle to lift the button onto a texture of its own,
+                which is what <code>will-change</code> and transforms actually buy you.
+              </p>
+            </li>
+          </ol>
+
+          <h2 class="explainer-title">Questions</h2>
+          <dl class="faq">
+            <dt>What does a browser actually do with a button?</dt>
+            <dd>
+              Four things, in order. It parses the markup into a DOM node, runs layout to
+              resolve that node into content, padding, border, and margin boxes, paints
+              those boxes into an ordered list of drawing operations, then hands the
+              result to the compositor as one or more layers. Cutaway scrubs through each
+              step against a real button as you scroll.
+            </dd>
+
+            <dt>What is the CSS box model?</dt>
+            <dd>
+              The four nested rectangles layout resolves for every element. Content holds
+              the text, padding surrounds it, the border wraps that, and the margin holds
+              neighbours away. Only the border box gets drawn, so the room an element
+              takes up is larger than the shape you actually see.
+            </dd>
+
+            <dt>What does promoting an element to its own GPU layer mean?</dt>
+            <dd>
+              The compositor keeps most of a page on a single layer. Give an element a
+              transform, an opacity animation, or <code>will-change</code>, and the
+              browser may hand it a texture of its own, which it can then move on the GPU
+              without repainting anything.
+            </dd>
+
+            <dt>Is promoting a layer always faster?</dt>
+            <dd>
+              No. Every promoted layer costs GPU memory for its texture. Promote enough
+              elements and you get a layer explosion that burns more memory than the
+              repaints it was meant to avoid. It pays off for a few moving elements and
+              costs you when applied to everything.
+            </dd>
+
+            <dt>Do I need to know any of this to write CSS?</dt>
+            <dd>
+              No, and that is rather the point. You can ship buttons for years without it.
+              It starts paying rent the first time you need to know why a margin moved
+              something you did not touch, or why one transform animates smoothly and
+              another stutters.
+            </dd>
+          </dl>
+
+          <a class="cta" href="https://github.com/ctkrug/anatomy-of-a-button">
+            View the source on GitHub
+          </a>
+        </div>
+      </section>
     </main>
+
+    <footer class="site-footer">
+      <p>More by Charlie Krug → <a href="https://apps.charliekrug.com">apps.charliekrug.com</a></p>
+    </footer>
+
     <script type="module" src="./src/main.js"></script>
   </body>
 </html>

@@ -705,6 +705,157 @@ body {
 }
 
 /*
+ * The explainer: the same content the sequence animates, written out below
+ * the fold for anyone who arrives without scrolling (or without motion).
+ * Shares the drafting-list styling with .annotation so the prose and the
+ * diagram's callouts read as one document, not a marketing slab bolted on.
+ */
+.explainer {
+  position: relative;
+  z-index: 2;
+  padding: var(--space-8) var(--space-4);
+  background: linear-gradient(180deg, transparent, rgba(15, 36, 56, 0.85) 18%);
+  border-top: 1px solid rgba(79, 209, 232, 0.18);
+}
+
+.explainer-inner {
+  max-width: 68ch;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.explainer-title {
+  margin: var(--space-4) 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  line-height: 1.2;
+}
+
+.explainer-lede,
+.stage-list-body,
+.faq dd {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.explainer code {
+  font-family: var(--font-ui);
+  font-size: 0.9em;
+  color: var(--accent);
+}
+
+.stage-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.stage-list li {
+  padding-left: var(--space-3);
+  /* A drafted rule down the margin rather than a bullet or a card: the same
+     redline vocabulary the plane callouts use. */
+  border-left: 1px solid rgba(79, 209, 232, 0.35);
+}
+
+.stage-list-label {
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--accent-support);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.faq {
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.faq dt {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+  margin-bottom: var(--space-1);
+}
+
+.faq dd {
+  margin: 0;
+}
+
+.cta {
+  align-self: flex-start;
+  margin-top: var(--space-4);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-4);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--bg);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition:
+    box-shadow var(--motion-ui),
+    transform var(--motion-ui);
+}
+
+.cta:hover {
+  box-shadow: 0 0 16px rgba(79, 209, 232, 0.5);
+}
+
+.cta:active {
+  transform: translateY(1px);
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.site-footer {
+  position: relative;
+  z-index: 2;
+  padding: var(--space-4);
+  text-align: center;
+  border-top: 1px solid rgba(79, 209, 232, 0.18);
+}
+
+.site-footer p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.site-footer a {
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(79, 209, 232, 0.4);
+  transition: color var(--motion-ui);
+}
+
+.site-footer a:hover {
+  color: var(--accent);
+}
+
+.site-footer a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/*
  * Responsive composition (backlog 4.1). Below the desktop breakpoint, the
  * deck's plane labels (which extend past the deck's own box) can exceed the
  * content width, so the whole scene scales down as one unit. Widened from a
