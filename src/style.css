@@ -484,9 +484,18 @@ body {
    dimmer); promoted, it reads as its own lit GPU texture. Unpromoted, its
    two layers sit at the SAME z depth by design (scene.js) — there is no
    separation to scale — so without a boost this group would read as visibly
-   flatter/smaller than the box-model/paint stages either side of it. */
+   flatter/smaller than the box-model/paint stages either side of it.
+   1.3125 = 105/80: it scales this group's +/-80px depth up to exactly the
+   +/-105px max already used (unboosted) by the box-model/paint groups, so
+   composite reads with the same visual weight instead of a bigger, untested
+   multiplier. A boost of 3.0 here previously sent the promoted button layer
+   to ~864px of z against perspective: 1400px — magnified ~2.6x and pushed
+   entirely below the viewport (y 1033-1480 at 1440x900) while emptying the
+   document layer's stroke, the opposite of what clicking "promote" should
+   teach. Keeping this at parity with box/paint's own verified-safe depth
+   keeps any future --explode-scale growth from reopening that failure. */
 .plane-group-composite {
-  --explode-boost: 3.0;
+  --explode-boost: 1.3125;
 }
 
 .plane-group-composite [data-layer="document"] .plane-face {
