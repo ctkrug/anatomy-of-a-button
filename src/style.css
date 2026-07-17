@@ -867,6 +867,14 @@ body {
   .scene {
     transform: scale(0.8);
   }
+
+  /* At phone width the centred hero column rides high enough to reach the
+     fixed .site-header, and the eyebrow runs under the wordmark. Reserving
+     header height as top padding drops the column clear of it; .stage centres
+     within its content box, so the extra padding is what buys the clearance. */
+  .stage {
+    padding-top: calc(var(--space-8) + var(--space-6));
+  }
 }
 
 @media (min-width: 600px) and (max-width: 1023px) {
