@@ -66,6 +66,7 @@ asset paths, so it can be hosted at a domain root or dropped into a subpath (e.g
 
 - [`docs/VISION.md`](docs/VISION.md) — problem, audience, core idea, what "v1 done" means.
 - [`docs/DESIGN.md`](docs/DESIGN.md) — visual direction, tokens, and layout intent.
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — codebase map, module responsibilities, data flow.
 - [`docs/BACKLOG.md`](docs/BACKLOG.md) — epic/story breakdown for the build.
 
 ## License
