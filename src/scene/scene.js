@@ -76,7 +76,7 @@ export const COMPOSITE_LAYERS = [
  */
 export function computeScene(progress, options = {}) {
   const p = Number.isFinite(progress) ? Math.min(1, Math.max(0, progress)) : 0;
-  const promoted = options.promoted === true;
+  const promoted = options?.promoted === true;
 
   const tilt = envelope(p, TILT_BAND);
   const separation = {
