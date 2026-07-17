@@ -65,3 +65,33 @@ export function attachScrollProgress(sectionEl, onProgress) {
     window.removeEventListener("resize", update);
   };
 }
+
+/**
+ * Wires computePinProgress up to real scroll/resize events for a
+ * position: sticky sequence section, and invokes onProgress(value) on every
+ * change. This is what drives the main scroll-scrubbed sequence, as opposed
+ * to attachScrollProgress's simpler enter/exit fade timing.
+ */
+export function attachPinProgress(sectionEl, onProgress) {
+  const update = () => {
+    const rect = sectionEl.getBoundingClientRect();
+    const sectionTop = rect.top + window.scrollY;
+    onProgress(
+      computePinProgress({
+        scrollY: window.scrollY,
+        sectionTop,
+        sectionHeight: rect.height,
+        viewportHeight: window.innerHeight,
+      }),
+    );
+  };
+
+  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update);
+  update();
+
+  return () => {
+    window.removeEventListener("scroll", update);
+    window.removeEventListener("resize", update);
+  };
+}
