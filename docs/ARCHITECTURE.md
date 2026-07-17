@@ -133,3 +133,11 @@ a `scrollWidth` overflow check surfaced; only rendered screenshots did. `npm run
 (`test/e2e/`) now codifies the composite-geometry case permanently so it can't silently regress
 again, but it is not a substitute for a fresh manual pass on a genuinely new layout change — it
 only re-checks the specific geometry it was written against.
+
+One caveat worth carrying forward, learned the hard way (see `docs/BACKLOG.md` Epic 6): "fully
+inside the viewport" is a weaker check than it sounds. It says nothing about what an element
+lands *on top of*. `.site-header` is `position: fixed; z-index: 10`, so a plane label can sit at
+a perfectly legal y 15, pass every containment assertion, and still be painted over by the
+header's own GitHub link. A layout check on this page needs to assert intersection against the
+header's boxes as well as against the viewport's, and to run at 390x844, not only at the
+1440x900 the e2e project currently defines.
