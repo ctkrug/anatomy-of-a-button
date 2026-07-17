@@ -2,7 +2,7 @@
 
 ## Aesthetic direction
 
-**Blueprint / technical.** Anatomy of a Button is a schematic of a browser button: a dark
+**Blueprint / technical.** Cutaway is a schematic of a browser button: a dark
 navy "drafting table" background with a faint cyan grid, cyan ink lines for structure, and
 warm orange for callouts and annotations — the visual language of an engineering blueprint or
 a technical cutaway diagram, applied to something as mundane as a `<button>`. This direction
