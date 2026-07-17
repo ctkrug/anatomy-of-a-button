@@ -426,7 +426,11 @@ body {
   left: 50%;
   bottom: 100%;
   transform: translate3d(-50%, calc(-1 * var(--space-4)), 0);
-  width: min(420px, 78vw);
+  /* Bumped from its old 420px cap to track the deck's growth (docs/DESIGN.md:
+     hero fills the viewport at every scroll position), but NOT by the full
+     --explode-scale factor — that grows fast enough to push the tree above
+     the stage's own top edge, where .stage's overflow:hidden clips it. */
+  width: min(600px, 60vw);
 }
 
 .dom-tree {
