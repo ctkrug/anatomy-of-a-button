@@ -61,6 +61,85 @@ body {
 }
 
 /*
+ * Site chrome. Fixed rather than absolute so the wordmark and the source link
+ * stay reachable through all 600vh of the sequence. .stage is sticky, not
+ * transformed, so it never becomes a containing block for this — position
+ * fixed keeps resolving against the viewport the whole way down.
+ */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  pointer-events: none;
+}
+
+.site-header a {
+  pointer-events: auto;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--text);
+  text-decoration: none;
+  border-radius: var(--radius);
+}
+
+.wordmark-mark {
+  width: 22px;
+  height: 22px;
+  /* The mark is the product: three planes of one element, pulled apart, with
+     the middle one lit the way a promoted layer reads in the composite stage. */
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+}
+
+.wordmark-mark-lit {
+  fill: rgba(79, 209, 232, 0.22);
+}
+
+.wordmark-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+}
+
+.source-link {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  transition:
+    color var(--motion-ui),
+    border-color var(--motion-ui);
+}
+
+.source-link:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.wordmark:focus-visible,
+.source-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/*
  * The sequence: a tall scroll track whose sticky .stage stays pinned in the
  * viewport for its whole height, so scrolling through it scrubs progress
  * (attachPinProgress) without the stage itself moving.
