@@ -25,16 +25,14 @@ has no memory of direction, so scrolling up produces exactly the frames scrollin
 
 ## Modules
 
-- **`src/scroll/progress.js`** — Pure math (`computeProgress`, `computePinProgress`,
-  `subProgress`) plus two thin DOM-wiring functions (`attachScrollProgress`,
-  `attachPinProgress`) that turn real scroll/resize events into a progress callback.
-  `attachPinProgress` is what drives the main sequence; `attachScrollProgress` is a simpler
-  enter/exit variant that main.js doesn't currently use but which stays covered by its own
-  tests.
-- **`src/scene/easing.js`** — Scroll-scrubbed (not time-based) shaping helpers: `lerp`,
-  `easeInOutCubic`/`easeOutCubic`, `envelope` (a 0→1→0 hump over a progress range — the basis
-  for "explode then recompose"), and `fadeBand` (envelope with explicit fade widths, used for
-  group/annotation opacity).
+- **`src/scroll/progress.js`** — `computePinProgress`, the pure math mapping a scroll position
+  onto the span during which the sticky stage is actually pinned, plus `attachPinProgress`, the
+  thin DOM wiring that turns real scroll/resize events into a progress callback and returns a
+  cleanup function. This is the only way progress is measured.
+- **`src/scene/easing.js`** — Scroll-scrubbed (not time-based) shaping helpers: `clamp`, `lerp`,
+  `easeInOutCubic`, `envelope` (a 0→1→0 hump over a progress range — the basis for "explode then
+  recompose"), and `fadeBand` (envelope with explicit fade widths, used for group/annotation
+  opacity).
 - **`src/scene/stages.js`** — `STAGES`: the six pipeline stages (rest, dom, box, paint,
   composite, recompose), each with a contiguous `[start, end)` progress range and its real
   annotation copy. `stageAt(progress)` resolves which stage owns a given progress value.
@@ -72,7 +70,7 @@ has no memory of direction, so scrolling up produces exactly the frames scrollin
 - `npm run dev` — Vite dev server.
 - `npm test` — `vitest run`, the full suite (pure logic + jsdom-based renderer/main tests).
 - `npm run coverage` — `vitest run --coverage` (v8 provider); core logic and render modules run
-  at 100% line coverage.
+  at 100% line and function coverage.
 - `npm run lint` — ESLint over `src/` and `test/`.
 - `npm run build` — static production build into `dist/`, relative-path (`base: "./"`) so it's
   deployable to a subpath (`apps.charliekrug.com/anatomy-of-a-button`) with no server.
