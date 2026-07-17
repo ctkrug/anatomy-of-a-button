@@ -626,14 +626,22 @@ body {
 }
 
 /*
- * Responsive composition (backlog 4.1). Below this, the deck's plane labels
- * (which extend past the deck's own box) can exceed a phone's content width,
- * so the whole scene scales down as one unit rather than letting labels
- * wrap or clip.
+ * Responsive composition (backlog 4.1). Below the desktop breakpoint, the
+ * deck's plane labels (which extend past the deck's own box) can exceed the
+ * content width, so the whole scene scales down as one unit rather than
+ * letting labels wrap or clip. Widened from a phone-only (max-width: 599px)
+ * rule to cover tablet too: the bigger hero-fill deck (docs/DESIGN.md) pushes
+ * the longest paint label past a 768px viewport's right edge as well.
  */
 @media (max-width: 599px) {
   .scene {
     transform: scale(0.8);
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+  .scene {
+    transform: scale(0.85);
   }
 }
 
