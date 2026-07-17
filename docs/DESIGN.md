@@ -73,6 +73,13 @@ The **rest and recompose** bookend stages (progress 0 and 1) are the one deliber
 "the diagram occupies the majority of the screen at every scroll position": the whole narrative
 is "It's just a button [reveal] ...and then it's just a button again," so those two stages show
 the literal, undramatic button rather than a blown-up cutaway — the contrast against the
-dom/box/paint/composite stages (each comfortably >=60vh on desktop) is the point. Verified via a
-real-browser measurement pass at 1440×900: dom/box/paint/composite measure 50-82vh; rest and
-recompose measure ~24vh by design.
+dom/box/paint/composite stages is the point. Rest and recompose measure ~24vh by design.
+
+Measured in Chromium at 1440×900 (closeout, 2026-07-17): box 72.8vh and paint 81.9vh clear the
+>=60vh floor. The dom stage's tree diagram is 34.3vh on its own but composes with the subject
+button beneath it to fill roughly the upper two thirds, which reads correctly. **Composite does
+not currently pass:** 34.2vh unpromoted, and toggling promote throws the button layer out of the
+stage entirely. See `docs/BACKLOG.md` Epic 5 — the root cause is `--explode-boost` and it is a
+ship blocker, not a deliberate exception like rest/recompose. An earlier note here claimed
+"dom/box/paint/composite measure 50-82vh"; that did not reproduce for composite and is corrected
+above.
