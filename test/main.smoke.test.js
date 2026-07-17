@@ -1,12 +1,55 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 describe("main entry point", () => {
-  it("mounts without throwing given the expected DOM shape", async () => {
-    document.body.innerHTML = `<div class="stage" id="stage" style="height: 100px;"></div>`;
+  it("mounts the sequence without throwing given the real page shape", async () => {
+    vi.resetModules();
+    document.body.innerHTML = `
+      <section class="sequence" id="sequence" style="height: 3000px;">
+        <div class="stage" id="stage">
+          <div class="scene">
+            <div class="deck" data-deck>
+              <button class="subject-button" data-subject type="button">Click me</button>
+            </div>
+          </div>
+          <div class="annotations" data-annotations></div>
+          <button class="promote-toggle" data-promote-toggle type="button" aria-pressed="false">
+            promote to its own GPU layer
+          </button>
+        </div>
+      </section>
+    `;
 
     await expect(import("../src/main.js")).resolves.toBeDefined();
 
-    const stage = document.getElementById("stage");
-    expect(stage.style.getPropertyValue("--progress")).not.toBe("");
+    const deck = document.querySelector("[data-deck]");
+    expect(deck.style.getPropertyValue("--deck-scale")).not.toBe("");
+  });
+
+  it("flips aria-pressed on the promote toggle when clicked", async () => {
+    vi.resetModules();
+    document.body.innerHTML = `
+      <section class="sequence" id="sequence" style="height: 3000px;">
+        <div class="stage" id="stage">
+          <div class="scene">
+            <div class="deck" data-deck>
+              <button class="subject-button" data-subject type="button">Click me</button>
+            </div>
+          </div>
+          <div class="annotations" data-annotations></div>
+          <button class="promote-toggle" data-promote-toggle type="button" aria-pressed="false">
+            promote to its own GPU layer
+          </button>
+        </div>
+      </section>
+    `;
+
+    await import("../src/main.js");
+
+    const toggle = document.querySelector("[data-promote-toggle]");
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+    toggle.click();
+    expect(toggle.getAttribute("aria-pressed")).toBe("true");
+    toggle.click();
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
   });
 });
