@@ -68,6 +68,13 @@ export const COMPOSITE_LAYERS = [
 ];
 
 /**
+ * Where an unpromoted button sits: on the document's own layer, not a texture
+ * of its own. Derived from the document layer so the two depths cannot drift
+ * apart and silently leave a gap that reads as a promotion that didn't happen.
+ */
+const SHARED_LAYER_DEPTH = COMPOSITE_LAYERS.find((layer) => layer.id === "document").depth;
+
+/**
  * Builds the scene for a given progress.
  *
  * @param {number} progress 0..1 across the pinned sequence.
@@ -121,7 +128,7 @@ export function computeScene(progress, options = {}) {
       // Unpromoted, the button shares the document's layer: it sits at the
       // same depth rather than lifting out into a texture of its own.
       z: scaleBy(
-        layer.id === "button" && !promoted ? -80 : layer.depth,
+        layer.id === "button" && !promoted ? SHARED_LAYER_DEPTH : layer.depth,
         separation.composite,
       ),
       opacity: groups.composite,
