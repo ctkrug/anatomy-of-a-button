@@ -9,5 +9,9 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
+    // test/e2e runs under Playwright's own runner (`npm run test:e2e`), not
+    // Vitest — it drives a real browser to check CSS 3D-transform geometry
+    // that jsdom doesn't lay out at all.
+    exclude: ["node_modules/**", "test/e2e/**"],
   },
 });
