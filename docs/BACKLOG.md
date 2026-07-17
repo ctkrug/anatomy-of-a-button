@@ -80,7 +80,7 @@ criteria — a later run should be able to check each one true/false without gue
   - `npm run build` output references only relative asset paths (no leading `/`).
   - The built `dist/` renders correctly when served from a non-root path locally (e.g. a local
     static server rooted one directory above `dist/`).
-- [ ] **4.4 — Design polish: full sequence review.**
+- [x] **4.4 — Design polish: full sequence review.**
   - A full scroll-through at 390px, 768px, and 1440px shows no anti-generic-ban violations
     (§D2 of the design standard) anywhere in the sequence.
   - The favicon, wordmark, and blueprint grid treatment are present and consistent across the
