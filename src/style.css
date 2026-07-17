@@ -50,9 +50,14 @@ body {
   min-height: 100vh;
 }
 
+/*
+ * No overflow-x: hidden here (or on any ancestor of .stage): setting only
+ * overflow-x implicitly computes overflow-y as auto, which turns the
+ * element into a scroll container and breaks position: sticky on every
+ * descendant. html's own overflow-x below is the only safe place for it.
+ */
 #app {
   max-width: 100vw;
-  overflow-x: hidden;
 }
 
 /*
@@ -81,13 +86,12 @@ body {
 }
 
 .hero-copy {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
+  /* Normal flow at rest, stacked above .scene, so the two never overlap.
+     Past the rest stage it's invisible anyway, so it switches to absolute
+     (removed from flow) rather than leaving a hole above the deck. */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: var(--space-2);
   padding: var(--space-4);
   text-align: center;
@@ -96,8 +100,10 @@ body {
 }
 
 /* STAGES[0] ("rest") owns roughly the first tenth of the sequence; past it
-   the hero copy has no reason to keep covering the exploding button. */
+   the hero copy has no reason to keep taking up layout space above the deck. */
 .stage[data-stage]:not([data-stage="rest"]) .hero-copy {
+  position: absolute;
+  inset: 0;
   opacity: 0;
   pointer-events: none;
 }
