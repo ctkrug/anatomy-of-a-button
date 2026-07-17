@@ -340,11 +340,11 @@ body {
    each other; offsetting them vertically keeps both readable regardless of
    how close the planes themselves sit. */
 .plane-group-composite [data-layer="document"] .plane-label {
-  top: 30%;
+  top: calc(50% - 24px);
 }
 
 .plane-group-composite [data-layer="button"] .plane-label {
-  top: 70%;
+  top: calc(50% + 24px);
 }
 
 /*
