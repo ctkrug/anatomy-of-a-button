@@ -1,5 +1,7 @@
 # Anatomy of a Button
 
+**▶ Live demo — [apps.charliekrug.com/anatomy-of-a-button](https://apps.charliekrug.com/anatomy-of-a-button/)**
+
 [![CI](https://github.com/ctkrug/anatomy-of-a-button/actions/workflows/ci.yml/badge.svg)](https://github.com/ctkrug/anatomy-of-a-button/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
