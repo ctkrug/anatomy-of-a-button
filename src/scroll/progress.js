@@ -11,6 +11,7 @@ export function computeProgress({ scrollY, sectionTop, sectionHeight, viewportHe
   const span = end - start;
   if (span <= 0) return 0;
   const raw = (scrollY - start) / span;
+  if (!Number.isFinite(raw)) return 0;
   return Math.min(1, Math.max(0, raw));
 }
 
@@ -25,6 +26,7 @@ export function computePinProgress({ scrollY, sectionTop, sectionHeight, viewpor
   const span = sectionHeight - viewportHeight;
   if (span <= 0) return 0;
   const raw = (scrollY - sectionTop) / span;
+  if (!Number.isFinite(raw)) return 0;
   return Math.min(1, Math.max(0, raw));
 }
 
@@ -35,7 +37,9 @@ export function computePinProgress({ scrollY, sectionTop, sectionHeight, viewpor
 export function subProgress(progress, start, end) {
   const span = end - start;
   if (span <= 0) return progress >= end ? 1 : 0;
-  return Math.min(1, Math.max(0, (progress - start) / span));
+  const raw = (progress - start) / span;
+  if (!Number.isFinite(raw)) return 0;
+  return Math.min(1, Math.max(0, raw));
 }
 
 /**

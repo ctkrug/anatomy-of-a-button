@@ -47,6 +47,13 @@ describe("computePinProgress", () => {
       previous = value;
     }
   });
+
+  it("returns 0 rather than NaN for a non-finite scrollY", () => {
+    for (const scrollY of [NaN, Infinity, -Infinity]) {
+      const value = computePinProgress({ ...base, scrollY });
+      expect(Number.isFinite(value)).toBe(true);
+    }
+  });
 });
 
 describe("subProgress", () => {
@@ -79,6 +86,12 @@ describe("subProgress", () => {
       const value = subProgress(p, 0.3, 0.7);
       expect(value).toBeGreaterThanOrEqual(0);
       expect(value).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it("returns 0 rather than NaN for a non-finite progress", () => {
+    for (const p of [NaN, Infinity, -Infinity]) {
+      expect(Number.isFinite(subProgress(p, 0.2, 0.6))).toBe(true);
     }
   });
 });
