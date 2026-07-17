@@ -3,6 +3,8 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
+import { COMPOSITE_LAYERS } from "../src/scene/scene.js";
+
 const cssPath = resolve(dirname(fileURLToPath(import.meta.url)), "../src/style.css");
 const css = readFileSync(cssPath, "utf8");
 
@@ -12,9 +14,12 @@ const css = readFileSync(cssPath, "utf8");
  */
 const MAX_EXPLODE_SCALE = 680 / 176;
 
-/** COMPOSITE_LAYERS' depth magnitude (src/scene/scene.js) — the value the
- *  boost below multiplies. */
-const COMPOSITE_DEPTH = 80;
+/**
+ * COMPOSITE_LAYERS' depth magnitude — the value the boost below multiplies.
+ * Read from the scene model rather than copied, so raising a layer's depth
+ * re-runs this guard against the real number instead of a stale duplicate.
+ */
+const COMPOSITE_DEPTH = Math.max(...COMPOSITE_LAYERS.map((layer) => Math.abs(layer.depth)));
 
 /** .scene's declared perspective (see src/style.css). */
 const PERSPECTIVE = 1400;
