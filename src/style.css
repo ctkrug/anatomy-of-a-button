@@ -279,10 +279,21 @@ body {
   color: var(--text-muted);
 }
 
-/* Box model: outermost (margin) drawn first so nearer boxes paint over it. */
+/*
+ * Box model: outermost (margin) drawn first so nearer boxes paint over it.
+ * The four planes sit close enough in z that their labels' default
+ * top: 50% would stack illegibly on top of each other, so each gets a fixed
+ * vertical offset from center — a percentage of the ~60px plane height
+ * isn't enough clearance for a two-line label (confirmed in a real-browser
+ * pass; see the composite group below for the same fix).
+ */
 .plane-group-box [data-layer="margin"] .plane-face {
   background: transparent;
   border: 1px dashed var(--accent-support);
+}
+
+.plane-group-box [data-layer="margin"] .plane-label {
+  top: calc(50% - 66px);
 }
 
 .plane-group-box [data-layer="border"] .plane-face {
@@ -290,9 +301,17 @@ body {
   border: 2px solid var(--accent);
 }
 
+.plane-group-box [data-layer="border"] .plane-label {
+  top: calc(50% - 22px);
+}
+
 .plane-group-box [data-layer="padding"] .plane-face {
   background: rgba(22, 50, 74, 0.75);
   border: 1px solid var(--text-muted);
+}
+
+.plane-group-box [data-layer="padding"] .plane-label {
+  top: calc(50% + 22px);
 }
 
 .plane-group-box [data-layer="content"] .plane-face {
@@ -300,11 +319,20 @@ body {
   border: 1px solid var(--accent);
 }
 
-/* Paint: the spec's own draw order, back to front. */
+.plane-group-box [data-layer="content"] .plane-label {
+  top: calc(50% + 66px);
+}
+
+/* Paint: the spec's own draw order, back to front. Same label-stagger need
+   as the box model group above. */
 .plane-group-paint [data-layer="shadow"] .plane-face {
   background: transparent;
   border: 1px dashed var(--text-muted);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+}
+
+.plane-group-paint [data-layer="shadow"] .plane-label {
+  top: calc(50% - 66px);
 }
 
 .plane-group-paint [data-layer="background"] .plane-face {
@@ -312,14 +340,26 @@ body {
   border: none;
 }
 
+.plane-group-paint [data-layer="background"] .plane-label {
+  top: calc(50% - 22px);
+}
+
 .plane-group-paint [data-layer="border"] .plane-face {
   background: transparent;
   border: 1px solid var(--text);
 }
 
+.plane-group-paint [data-layer="border"] .plane-label {
+  top: calc(50% + 22px);
+}
+
 .plane-group-paint [data-layer="text"] .plane-face {
   background: transparent;
   border: none;
+}
+
+.plane-group-paint [data-layer="text"] .plane-label {
+  top: calc(50% + 66px);
 }
 
 /* Compositing: the unpromoted button shares the document's layer (flatter,
