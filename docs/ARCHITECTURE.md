@@ -47,7 +47,10 @@ has no memory of direction, so scrolling up produces exactly the frames scrollin
   `TREE_NODES`/`TREE_EDGES` data. Built once at mount; never touched per frame.
 - **`src/render/planes.js`** — Builds one absolutely-positioned "plane" element per box-model
   box / paint operation / compositor layer (`createPlaneGroup`), each labelled via
-  `plane-label`/`plane-label-name`/`plane-label-note`. Built once at mount.
+  `plane-label`/`plane-label-name`/`plane-label-note`. Built once at mount. Each layer's label
+  defaults to vertically centered on its own plane (`top: 50%`), which overlaps illegibly once
+  more than one layer is in view — every group in `style.css` gives each `[data-layer]` a fixed
+  `calc(50% ± Npx)` offset instead. A new layer added to a group needs its own offset too.
 - **`src/render/renderer.js`** — `mount(root)` wires dom-tree + plane groups + annotation
   figures into the stage's `[data-deck]`/`[data-annotations]`/`[data-subject]` structure and
   returns `{ render }`. `render(scene)` is the only thing that runs per scroll frame: it writes
@@ -68,6 +71,8 @@ has no memory of direction, so scrolling up produces exactly the frames scrollin
 
 - `npm run dev` — Vite dev server.
 - `npm test` — `vitest run`, the full suite (pure logic + jsdom-based renderer/main tests).
+- `npm run coverage` — `vitest run --coverage` (v8 provider); core logic and render modules run
+  at 100% line coverage.
 - `npm run lint` — ESLint over `src/` and `test/`.
 - `npm run build` — static production build into `dist/`, relative-path (`base: "./"`) so it's
   deployable to a subpath (`apps.charliekrug.com/anatomy-of-a-button`) with no server.
@@ -78,7 +83,9 @@ has no memory of direction, so scrolling up produces exactly the frames scrollin
 Unit tests (vitest + jsdom) cover the pure logic thoroughly (`easing`, `stages`, `scene`,
 `progress`/`pin-progress`, `dom-tree`, `renderer`) plus DOM-wiring smoke tests for `main.js`.
 jsdom does not perform real layout, so it cannot catch layout-only bugs (e.g. an ancestor's
-`overflow-x` silently breaking `position: sticky`, or content overflowing a fixed-height
-container) — those were caught in this run via a real headless-Chromium pass (Playwright)
-across 390/768/1440 at every pipeline stage, not by the test suite. Any future layout-sensitive
-change should get the same real-browser check, not just `npm test`.
+`overflow-x` silently breaking `position: sticky`, content overflowing a fixed-height
+container, a CSS shorthand like `inset` silently resetting longhands declared earlier in the
+same rule, or plane labels overlapping because they're too close together in a small box) —
+those were caught across two runs via a real headless-Chromium pass (Playwright) across
+390/768/1440 at every pipeline stage, not by the test suite. Any future layout-sensitive change
+should get the same real-browser check, not just `npm test`.
