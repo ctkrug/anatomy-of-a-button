@@ -150,8 +150,8 @@ body {
      blueprint is drawn bigger than its subject. 176/60 is the reference
      aspect ratio the box-model/paint/composite offsets below were tuned
      against; --explode-scale carries that same growth into their spread. */
-  --btn-w: clamp(220px, 34vw, 560px);
-  --btn-h: clamp(75px, 11.6vw, 191px);
+  --btn-w: clamp(240px, 44vw, 680px);
+  --btn-h: clamp(82px, 15vw, 232px);
   --explode-scale: calc(var(--btn-w) / 176px);
   position: relative;
   width: var(--btn-w);
@@ -244,11 +244,16 @@ body {
   /* expand-x/expand-y/z are tuned against the 176px reference button
      (scene.js); multiplying by --explode-scale keeps the box-model/paint/
      composite separation proportional as the deck grows past that size,
-     instead of the same fixed-pixel gap shrinking into a rounding error. */
+     instead of the same fixed-pixel gap shrinking into a rounding error.
+     --explode-boost (default 1, overridden per group below) layers a
+     second multiplier on top — kept as its own property rather than
+     reassigning --explode-scale itself, since "--x: calc(var(--x) * n)"
+     is a self-reference: the spec treats it as cyclic and guaranteed-
+     invalid, which silently falls back to 1 instead of scaling. */
   transform: translate3d(
-    calc(var(--expand-x, 0px) * var(--explode-scale, 1)),
-    calc(var(--expand-y, 0px) * var(--explode-scale, 1)),
-    calc(var(--z, 0px) * var(--explode-scale, 1))
+    calc(var(--expand-x, 0px) * var(--explode-scale, 1) * var(--explode-boost, 1)),
+    calc(var(--expand-y, 0px) * var(--explode-scale, 1) * var(--explode-boost, 1)),
+    calc(var(--z, 0px) * var(--explode-scale, 1) * var(--explode-boost, 1))
   );
 }
 
@@ -307,7 +312,7 @@ body {
 }
 
 .plane-group-box [data-layer="margin"] .plane-label {
-  top: calc(50% - (66px * var(--explode-scale, 1)));
+  top: calc(50% - (66px * var(--explode-scale, 1) * var(--explode-boost, 1)));
 }
 
 .plane-group-box [data-layer="border"] .plane-face {
@@ -316,7 +321,7 @@ body {
 }
 
 .plane-group-box [data-layer="border"] .plane-label {
-  top: calc(50% - (22px * var(--explode-scale, 1)));
+  top: calc(50% - (22px * var(--explode-scale, 1) * var(--explode-boost, 1)));
 }
 
 .plane-group-box [data-layer="padding"] .plane-face {
@@ -325,7 +330,7 @@ body {
 }
 
 .plane-group-box [data-layer="padding"] .plane-label {
-  top: calc(50% + (22px * var(--explode-scale, 1)));
+  top: calc(50% + (22px * var(--explode-scale, 1) * var(--explode-boost, 1)));
 }
 
 .plane-group-box [data-layer="content"] .plane-face {
@@ -334,7 +339,7 @@ body {
 }
 
 .plane-group-box [data-layer="content"] .plane-label {
-  top: calc(50% + (66px * var(--explode-scale, 1)));
+  top: calc(50% + (66px * var(--explode-scale, 1) * var(--explode-boost, 1)));
 }
 
 /* Paint: the spec's own draw order, back to front. Same label-stagger need
@@ -346,7 +351,7 @@ body {
 }
 
 .plane-group-paint [data-layer="shadow"] .plane-label {
-  top: calc(50% - (66px * var(--explode-scale, 1)));
+  top: calc(50% - (66px * var(--explode-scale, 1) * var(--explode-boost, 1)));
 }
 
 .plane-group-paint [data-layer="background"] .plane-face {
@@ -355,7 +360,7 @@ body {
 }
 
 .plane-group-paint [data-layer="background"] .plane-label {
-  top: calc(50% - (22px * var(--explode-scale, 1)));
+  top: calc(50% - (22px * var(--explode-scale, 1) * var(--explode-boost, 1)));
 }
 
 .plane-group-paint [data-layer="border"] .plane-face {
@@ -364,7 +369,7 @@ body {
 }
 
 .plane-group-paint [data-layer="border"] .plane-label {
-  top: calc(50% + (22px * var(--explode-scale, 1)));
+  top: calc(50% + (22px * var(--explode-scale, 1) * var(--explode-boost, 1)));
 }
 
 .plane-group-paint [data-layer="text"] .plane-face {
@@ -373,11 +378,18 @@ body {
 }
 
 .plane-group-paint [data-layer="text"] .plane-label {
-  top: calc(50% + (66px * var(--explode-scale, 1)));
+  top: calc(50% + (66px * var(--explode-scale, 1) * var(--explode-boost, 1)));
 }
 
 /* Compositing: the unpromoted button shares the document's layer (flatter,
-   dimmer); promoted, it reads as its own lit GPU texture. */
+   dimmer); promoted, it reads as its own lit GPU texture. Unpromoted, its
+   two layers sit at the SAME z depth by design (scene.js) — there is no
+   separation to scale — so without a boost this group would read as visibly
+   flatter/smaller than the box-model/paint stages either side of it. */
+.plane-group-composite {
+  --explode-boost: 3.0;
+}
+
 .plane-group-composite [data-layer="document"] .plane-face {
   background: var(--surface-1);
   border: 1px solid var(--text-muted);
@@ -394,11 +406,11 @@ body {
    each other; offsetting them vertically keeps both readable regardless of
    how close the planes themselves sit. */
 .plane-group-composite [data-layer="document"] .plane-label {
-  top: calc(50% - (24px * var(--explode-scale, 1)));
+  top: calc(50% - (24px * var(--explode-scale, 1) * var(--explode-boost, 1)));
 }
 
 .plane-group-composite [data-layer="button"] .plane-label {
-  top: calc(50% + (24px * var(--explode-scale, 1)));
+  top: calc(50% + (24px * var(--explode-scale, 1) * var(--explode-boost, 1)));
 }
 
 /*
