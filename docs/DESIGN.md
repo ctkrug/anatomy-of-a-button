@@ -75,11 +75,24 @@ is "It's just a button [reveal] ...and then it's just a button again," so those 
 the literal, undramatic button rather than a blown-up cutaway — the contrast against the
 dom/box/paint/composite stages is the point. Rest and recompose measure ~24vh by design.
 
+The **composite stage's unpromoted (default) frame** is a second, narrower deliberate exception,
+added at the same closeout that fixed the bug below: `scene.js` puts the document and button
+layers at the *same* z depth when unpromoted, by design — "most elements share one layer" is
+the point being taught, and a shared layer has no separation to blow up into a >=60vh cutaway
+without either an unjustifiably large `--explode-boost` or a purely cosmetic label-only spread
+that starts clipping off the top of the stage at desktop width (the same class of bug the fix
+below closes, just on the label instead of the plane). It measures ~48-53vh unpromoted at
+1440x900 — under the floor but fully on screen — and the payoff is one click away: promoted, the
+same group measures ~93vh, comfortably clearing it. See `docs/BACKLOG.md` Epic 5 for the
+measured trade-off space this exception is based on.
+
 Measured in Chromium at 1440×900 (closeout, 2026-07-17): box 72.8vh and paint 81.9vh clear the
 >=60vh floor. The dom stage's tree diagram is 34.3vh on its own but composes with the subject
-button beneath it to fill roughly the upper two thirds, which reads correctly. **Composite does
-not currently pass:** 34.2vh unpromoted, and toggling promote throws the button layer out of the
-stage entirely. See `docs/BACKLOG.md` Epic 5 — the root cause is `--explode-boost` and it is a
-ship blocker, not a deliberate exception like rest/recompose. An earlier note here claimed
-"dom/box/paint/composite measure 50-82vh"; that did not reproduce for composite and is corrected
-above.
+button beneath it to fill roughly the upper two thirds, which reads correctly. Composite
+regressed at that closeout — 34.2vh unpromoted, and toggling promote threw the button layer
+entirely out of the stage (see `docs/BACKLOG.md` Epic 5, since fixed: `--explode-boost` capped
+at a perspective-safe 1.3125, composite label offset given its own independent base so the
+group still reads with weight, phone width given a further reduction to keep the label clear of
+`.stage`'s `overflow: hidden`). Re-measured post-fix: promoted 93.1vh, unpromoted 48.7vh, neither
+clipped, at 1440x900. An earlier note here claimed "dom/box/paint/composite measure 50-82vh";
+that did not reproduce for composite either before or after this fix and remains corrected.
