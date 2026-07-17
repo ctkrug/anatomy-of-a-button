@@ -73,6 +73,17 @@ body {
 }
 
 .stage {
+  /* Sized to fill the stage (docs/DESIGN.md: hero >=60vh on desktop), not to
+     look like a literal button — this is a magnified cutaway, and a
+     blueprint is drawn bigger than its subject. 176/60 is the reference
+     aspect ratio the box-model/paint/composite offsets in .deck/.plane were
+     tuned against. Declared here (not on .deck) so both .deck and this
+     rule's own gap below can read --explode-scale — a custom property only
+     cascades to descendants, and .deck's exploded planes visually overflow
+     its own small layout box by an amount proportional to this same scale. */
+  --btn-w: clamp(240px, 44vw, 680px);
+  --btn-h: clamp(82px, 15vw, 232px);
+  --explode-scale: calc(var(--btn-w) / 176px);
   position: sticky;
   top: 0;
   height: 100vh;
@@ -83,6 +94,21 @@ body {
   justify-content: center;
   gap: var(--space-4);
   padding: var(--space-6) var(--space-4);
+}
+
+/*
+ * Below the 1024px breakpoint .scene and .annotations stack in normal flow
+ * (see the media query at the bottom of this file). .scene's own layout box
+ * is just the deck's small footprint, but the exploded planes inside it
+ * paint well past that box — without extra clearance below it, the diagram
+ * visually overlaps the annotation copy stacked underneath. A margin on
+ * .scene itself (rather than the shared flex gap) keeps this targeted: it
+ * doesn't also pad out every other sibling boundary in the column.
+ */
+@media (max-width: 1023px) {
+  .scene {
+    margin-bottom: calc(70px * var(--explode-scale, 1));
+  }
 }
 
 .hero-copy {
@@ -145,14 +171,8 @@ body {
 }
 
 .deck {
-  /* Sized to fill the stage (docs/DESIGN.md: hero >=60vh on desktop), not to
-     look like a literal button — this is a magnified cutaway, and a
-     blueprint is drawn bigger than its subject. 176/60 is the reference
-     aspect ratio the box-model/paint/composite offsets below were tuned
-     against; --explode-scale carries that same growth into their spread. */
-  --btn-w: clamp(240px, 44vw, 680px);
-  --btn-h: clamp(82px, 15vw, 232px);
-  --explode-scale: calc(var(--btn-w) / 176px);
+  /* --btn-w/--btn-h/--explode-scale are declared on .stage, not here — see
+     the comment there. */
   position: relative;
   width: var(--btn-w);
   height: var(--btn-h);
