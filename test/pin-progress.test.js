@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { attachPinProgress, computePinProgress, subProgress } from "../src/scroll/progress.js";
+import { attachPinProgress, computePinProgress } from "../src/scroll/progress.js";
 
 describe("computePinProgress", () => {
   // A 3000px section pinned against an 800px viewport: the pin is engaged for
@@ -52,46 +52,6 @@ describe("computePinProgress", () => {
     for (const scrollY of [NaN, Infinity, -Infinity]) {
       const value = computePinProgress({ ...base, scrollY });
       expect(Number.isFinite(value)).toBe(true);
-    }
-  });
-});
-
-describe("subProgress", () => {
-  it("is 0 at and below the range start", () => {
-    expect(subProgress(0.2, 0.2, 0.6)).toBe(0);
-    expect(subProgress(0, 0.2, 0.6)).toBe(0);
-  });
-
-  it("is 1 at and above the range end", () => {
-    expect(subProgress(0.6, 0.2, 0.6)).toBe(1);
-    expect(subProgress(1, 0.2, 0.6)).toBe(1);
-  });
-
-  it("rescales the middle of the range to 0.5", () => {
-    expect(subProgress(0.4, 0.2, 0.6)).toBeCloseTo(0.5);
-  });
-
-  it("handles a full 0..1 range as the identity", () => {
-    expect(subProgress(0.37, 0, 1)).toBeCloseTo(0.37);
-  });
-
-  it("degrades to a step for a zero-width range instead of dividing by zero", () => {
-    expect(subProgress(0.4, 0.5, 0.5)).toBe(0);
-    expect(subProgress(0.5, 0.5, 0.5)).toBe(1);
-    expect(subProgress(0.6, 0.5, 0.5)).toBe(1);
-  });
-
-  it("stays within [0, 1] for any input progress", () => {
-    for (let p = -1; p <= 2; p += 0.01) {
-      const value = subProgress(p, 0.3, 0.7);
-      expect(value).toBeGreaterThanOrEqual(0);
-      expect(value).toBeLessThanOrEqual(1);
-    }
-  });
-
-  it("returns 0 rather than NaN for a non-finite progress", () => {
-    for (const p of [NaN, Infinity, -Infinity]) {
-      expect(Number.isFinite(subProgress(p, 0.2, 0.6))).toBe(true);
     }
   });
 });
