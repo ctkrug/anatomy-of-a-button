@@ -55,8 +55,35 @@ body {
   overflow-x: hidden;
 }
 
-.hero {
-  min-height: 100vh;
+/*
+ * The sequence: a tall scroll track whose sticky .stage stays pinned in the
+ * viewport for its whole height, so scrolling through it scrubs progress
+ * (attachPinProgress) without the stage itself moving.
+ */
+.sequence {
+  position: relative;
+  /* Scroll room for the whole pipeline: long enough that the box-model,
+     paint, and composite stages each get a comfortable scrub range. */
+  height: 600vh;
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-4);
+}
+
+.hero-copy {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -64,6 +91,15 @@ body {
   gap: var(--space-2);
   padding: var(--space-4);
   text-align: center;
+  opacity: 1;
+  transition: opacity var(--motion-ui);
+}
+
+/* STAGES[0] ("rest") owns roughly the first tenth of the sequence; past it
+   the hero copy has no reason to keep covering the exploding button. */
+.stage[data-stage]:not([data-stage="rest"]) .hero-copy {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .hero-eyebrow {
@@ -90,17 +126,41 @@ body {
   font-size: 1.05rem;
 }
 
-.stage {
-  min-height: 60vh;
-  width: 100%;
-  max-width: 720px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: var(--space-4);
+/*
+ * The scene: a small 3D stage the deck lives in. perspective is set here
+ * (not on .deck) so the deck's own rotateX/rotateZ/scale transform composes
+ * with it rather than replacing it.
+ */
+.scene {
+  position: relative;
+  z-index: 2;
+  perspective: 1400px;
+  perspective-origin: 50% 42%;
+}
+
+.deck {
+  --btn-w: 176px;
+  --btn-h: 60px;
+  position: relative;
+  width: var(--btn-w);
+  height: var(--btn-h);
+  transform-style: preserve-3d;
+  /* No transition here: rotate-x/rotate-z/deck-scale are scroll-scrubbed
+     (docs/DESIGN.md), so the deck must track the pointer/scroll input with
+     zero added lag, not ease toward it. */
+  transform: rotateX(var(--rotate-x, 0deg)) rotateZ(var(--rotate-z, 0deg))
+    scale(var(--deck-scale, 1));
 }
 
 .subject-button {
+  /* Fills the deck exactly (position: absolute; inset: 0) so its resting
+     geometry is the same box every plane in the exploded views is offset
+     from — the button IS the deck's rest state, not a separate element. */
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-ui);
   font-size: 1rem;
   font-weight: 500;
@@ -108,8 +168,6 @@ body {
   background: var(--surface-2);
   border: 1px solid var(--text-muted);
   border-radius: var(--radius);
-  padding: var(--space-2) var(--space-4);
-  min-height: 44px;
   cursor: pointer;
   transition:
     transform var(--motion-ui),
