@@ -20,7 +20,9 @@ async function scrollToComposite(page, progress = 0.85) {
   // Mid-peak of the composite separation band (scene.js SEPARATION_BANDS.composite
   // is 0.72-0.96, peaking 0.82-0.88) — full separation, not a transition frame.
   await page.evaluate((y) => window.scrollTo(0, y), sectionTop + progress * span);
-  await expect(page.locator(".stage")).toHaveAttribute("data-stage", "composite");
+  if (progress < 0.88) {
+    await expect(page.locator(".stage")).toHaveAttribute("data-stage", "composite");
+  }
 }
 
 async function compositeBoundingBox(page) {
@@ -102,15 +104,23 @@ test("promoting the button layer separates it without clipping it off screen", a
   expect(afterHeight).toBeGreaterThan(beforeHeight);
 });
 
-test("phone composite diagram clears the fixed header before and after promotion", async ({
+test("phone composite diagram clears the fixed header throughout its visible band", async ({
   page,
 }) => {
   await page.goto("/");
+  const visibleCompositeProgress = [0.73, 0.78, 0.82, 0.85, 0.88, 0.91, 0.95];
+
+  for (const progress of visibleCompositeProgress) {
+    await scrollToComposite(page, progress);
+    await expectCompositeClearOfHeader(page);
+  }
 
   await scrollToComposite(page);
-  await expectCompositeClearOfHeader(page);
-
   await page.click(".promote-toggle");
   await expect(page.locator(".promote-toggle")).toHaveAttribute("aria-pressed", "true");
-  await expectCompositeClearOfHeader(page);
+
+  for (const progress of visibleCompositeProgress) {
+    await scrollToComposite(page, progress);
+    await expectCompositeClearOfHeader(page);
+  }
 });
