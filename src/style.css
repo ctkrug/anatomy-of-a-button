@@ -497,6 +497,7 @@ body {
 .plane-group-composite {
   --explode-boost: 1.3125;
   --composite-label-offset: 65px;
+  --composite-button-label-offset: var(--composite-label-offset);
 }
 
 .plane-group-composite [data-layer="document"] .plane-face {
@@ -533,7 +534,10 @@ body {
 .plane-group-composite [data-layer="button"] .plane-label {
   top: calc(
     50% +
-      (var(--composite-label-offset) * var(--explode-scale, 1) * var(--explode-boost, 1))
+      (
+        var(--composite-button-label-offset) * var(--explode-scale, 1) *
+          var(--explode-boost, 1)
+      )
   );
 }
 
@@ -915,6 +919,15 @@ body {
      drift back through the header on its way out. */
   .plane-group-composite {
     --composite-label-offset: calc(32px + (16px * var(--composite-visibility, 0)));
+  }
+
+  /* When both planes deliberately share the document depth, give the lower
+     label a little more separation instead of faking a GPU-layer gap. This
+     keeps the unpromoted comparison legible and close in silhouette to the
+     box and paint frames; the already-tall promoted state retains the
+     symmetric 48px label spread above. */
+  .stage[data-promoted="false"] .plane-group-composite {
+    --composite-button-label-offset: 86px;
   }
 }
 
