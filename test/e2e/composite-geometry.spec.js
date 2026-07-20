@@ -9,7 +9,7 @@ import { expect, test } from "@playwright/test";
  * browser laying out real CSS — hence this separate e2e project.
  */
 
-async function scrollToComposite(page) {
+async function scrollToComposite(page, progress = 0.85) {
   const { sectionTop, sectionHeight } = await page.evaluate(() => {
     const el = document.querySelector(".sequence");
     const rect = el.getBoundingClientRect();
@@ -19,7 +19,7 @@ async function scrollToComposite(page) {
   const span = sectionHeight - viewportHeight;
   // Mid-peak of the composite separation band (scene.js SEPARATION_BANDS.composite
   // is 0.72-0.96, peaking 0.82-0.88) — full separation, not a transition frame.
-  await page.evaluate((y) => window.scrollTo(0, y), sectionTop + 0.85 * span);
+  await page.evaluate((y) => window.scrollTo(0, y), sectionTop + progress * span);
   await expect(page.locator(".stage")).toHaveAttribute("data-stage", "composite");
 }
 
@@ -42,6 +42,35 @@ function expectOnScreen(box, viewport) {
   expect(box.left).toBeGreaterThanOrEqual(-1);
   expect(box.bottom).toBeLessThanOrEqual(viewport.height + 1);
   expect(box.right).toBeLessThanOrEqual(viewport.width + 1);
+}
+
+function boxesIntersect(first, second) {
+  return (
+    first.left < second.right &&
+    first.right > second.left &&
+    first.top < second.bottom &&
+    first.bottom > second.top
+  );
+}
+
+async function expectCompositeClearOfHeader(page) {
+  const { compositeBoxes, headerBoxes } = await page.evaluate(() => {
+    const box = (element) => {
+      const { top, right, bottom, left } = element.getBoundingClientRect();
+      return { top, right, bottom, left };
+    };
+
+    return {
+      compositeBoxes: [...document.querySelectorAll('[data-group="composite"] .plane, [data-group="composite"] .plane-label')].map(box),
+      headerBoxes: [...document.querySelectorAll(".wordmark, .source-link")].map(box),
+    };
+  });
+
+  for (const compositeBox of compositeBoxes) {
+    for (const headerBox of headerBoxes) {
+      expect(boxesIntersect(compositeBox, headerBox)).toBe(false);
+    }
+  }
 }
 
 test("composite group stays fully on screen, unpromoted", async ({ page }) => {
@@ -71,4 +100,17 @@ test("promoting the button layer separates it without clipping it off screen", a
   const beforeHeight = before.bottom - before.top;
   const afterHeight = after.bottom - after.top;
   expect(afterHeight).toBeGreaterThan(beforeHeight);
+});
+
+test("phone composite diagram clears the fixed header before and after promotion", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  await scrollToComposite(page);
+  await expectCompositeClearOfHeader(page);
+
+  await page.click(".promote-toggle");
+  await expect(page.locator(".promote-toggle")).toHaveAttribute("aria-pressed", "true");
+  await expectCompositeClearOfHeader(page);
 });

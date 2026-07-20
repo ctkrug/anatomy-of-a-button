@@ -19,5 +19,8 @@ export default defineConfig({
   use: {
     baseURL: "http://localhost:4310",
   },
-  projects: [{ name: "chromium", use: { viewport: { width: 1440, height: 900 } } }],
+  projects: [
+    { name: "desktop-chromium", use: { viewport: { width: 1440, height: 900 } } },
+    { name: "phone-chromium", use: { viewport: { width: 390, height: 844 } } },
+  ],
 });
