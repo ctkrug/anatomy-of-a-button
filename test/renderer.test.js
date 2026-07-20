@@ -160,6 +160,14 @@ describe("render", () => {
     expect(root.dataset.promoted).toBe("true");
   });
 
+  it("exposes composite visibility for responsive layout corrections", () => {
+    render(computeScene(0.72));
+    expect(root.style.getPropertyValue("--composite-visibility")).toBe("0.000");
+
+    render(computeScene(0.85));
+    expect(root.style.getPropertyValue("--composite-visibility")).toBe("1.000");
+  });
+
   it("moves the promoted button layer forward only when promoted (story 2.2)", () => {
     const buttonZ = () =>
       parseFloat(
