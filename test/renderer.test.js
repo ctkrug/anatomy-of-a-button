@@ -168,6 +168,14 @@ describe("render", () => {
     expect(root.style.getPropertyValue("--composite-visibility")).toBe("1.000");
   });
 
+  it("holds the responsive composite layout through the fade-out", () => {
+    render(computeScene(0.95));
+    expect(root.style.getPropertyValue("--composite-visibility")).toBe("1.000");
+
+    render(computeScene(0.96));
+    expect(root.style.getPropertyValue("--composite-visibility")).toBe("0.000");
+  });
+
   it("moves the promoted button layer forward only when promoted (story 2.2)", () => {
     const buttonZ = () =>
       parseFloat(
