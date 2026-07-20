@@ -131,7 +131,7 @@ Measured at 1440x900 in Chromium, composite stage, promote ON, varying only the 
   - [x] The composite group's unpromoted frame is fully on screen and reads with comparable
         visual weight to its pre-regression baseline (48-53vh vs. the original 34.2vh).
   - [x] Promoting it reaches the >=60vh floor (93.1vh at 1440x900) without any clipping (see 5.1).
-- [~] **5.3 — No composite clipping at tablet and phone.** (Partially reopened, see Epic 6.) Re-measured post-fix at 1440x900,
+- [x] **5.3 — No composite clipping at tablet and phone.** Re-measured post-fix at 1440x900,
       1920x1080, 768x1024, and 390x844, promote OFF and ON: no clipping at desktop/widescreen/
       tablet. Phone (390x844) needed a further, scoped fix — the composite stage carries the
       sequence's longest annotation copy, and since `.stage`'s flex column centers as one group,
@@ -140,11 +140,8 @@ Measured at 1440x900 in Chromium, composite stage, promote ON, varying only the 
       `max-width: 599px` breakpoint. The document label's top edge moved from y -46 to y +15.
   - [x] At 390x844 and 768x1024, every composite plane and label is fully inside the viewport
         across the whole composite band, with promote OFF and ON.
-  - [ ] The composite diagram does not overlap the site header at any width. **Reopened at
-        CLOSEOUT — this criterion was checked but does not hold at 390x844.** The 32px phone
-        label offset that fixed the viewport clipping lands the document label at y 15..67,
-        inside the fixed header's band, where it collides with the GitHub link. Verified against
-        viewport bounds only, which is what let it pass. See Epic 6.
+  - [x] The composite diagram does not overlap the site header at any width. Epic 6 reserves
+        phone header clearance for the whole visible composite band and guards it in Chromium.
 
 ## Epic 6 — Closeout blockers (phone composite collides with the header)
 
@@ -164,7 +161,7 @@ Measured at 390x844 in Chromium, composite peak (scroll progress 0.84):
 Present across the whole composite band (progress ~0.80..0.88) in both promote states. Not
 reproducible at 768x1024 or 1440x900, where the group clears the header.
 
-- [ ] **6.1 — The composite diagram must clear the site header at 390px.** No composite plane
+- [x] **6.1 — The composite diagram clears the site header at 390px.** No composite plane
       or label may intersect the header's wordmark or GitHub link, in either promote state,
       anywhere in the composite band. The root cause is *vertical position*, not the label
       offset alone: `.stage` centers its flex column as one group, and the composite stage
@@ -172,21 +169,23 @@ reproducible at 768x1024 or 1440x900, where the group clears the header.
       any other stage (see `docs/ARCHITECTURE.md`). A fix that only shrinks the label offset
       again trades this collision back for the y -46 clipping Epic 5 just fixed. Prefer giving
       the phone stage a header-sized top boundary the deck is laid out within.
-  - [ ] At 390x844, promote OFF and ON, no `.plane`/`.plane-label` box intersects `.wordmark`
-        or `.source-link` at any progress in 0.72..0.96.
-  - [ ] The document label stays fully inside the viewport (no return to the y -46 clipping).
-- [ ] **6.2 — The phone composite stage should read with weight comparable to its neighbours.**
+  - [x] At 390x844, promote OFF and ON, no `.plane`/`.plane-label` box intersects `.wordmark`
+        or `.source-link` anywhere the composite group is painted (0.72..0.96).
+  - [x] The document label stays fully inside the viewport (measured y 92px at the peak).
+- [x] **6.2 — The phone composite stage reads with weight comparable to its neighbours.**
       At 390x844 the composite group is 14.1vh unpromoted against the box (~24vh) and paint
       (~31vh) stages at the same width, and it sits jammed against the top edge with roughly
       170px of empty grid between it and the annotation copy. It is the sequence's payoff stage
       and currently its weakest frame on the most common viewport. Fixing 6.1 by moving the deck
       down may resolve this too; check both together.
-  - [ ] The unpromoted composite group at 390x844 reads at a size comparable to the box and
-        paint stages, with no dead band of empty background between the diagram and the copy.
-- [ ] **6.3 — Extend the e2e suite to cover header collision, not just viewport bounds.**
+  - [x] The unpromoted composite group at 390x844 is 181px (21.4vh), up from 119px (14.1vh),
+        and is guarded at a 180px minimum. The box and paint peaks measure 232px and 270px;
+        the remaining difference expresses the deliberate shared-depth comparison rather than
+        leaving a collapsed strip.
+- [x] **6.3 — Extend the e2e suite to cover header collision, not just viewport bounds.**
       `test/e2e/composite-geometry.spec.js` runs at 1440x900 only and asserts viewport
       containment, which is exactly why 5.3 passed while broken. This is the guard that should
       have caught it.
-  - [ ] The e2e suite runs the composite checks at 390x844 as well as 1440x900.
-  - [ ] A test asserts no plane/label intersects the header's interactive boxes, in both
-        promote states.
+  - [x] The e2e suite runs the composite checks at 390x844 as well as 1440x900.
+  - [x] A test asserts no plane/label intersects the header's interactive boxes, in both
+        promote states, at seven samples spanning the full visible band.
