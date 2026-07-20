@@ -126,6 +126,14 @@ export function mount(root) {
     applyGroup("boxModel", scene.groups.boxModel);
     applyGroup("paint", scene.groups.paint);
     applyGroup("composite", scene.groups.composite);
+    // The phone layout reserves room for the whole time a composite plane is
+    // painted. It switches only at the group's display threshold, while the
+    // group is imperceptible, so the fading label can never drift into the
+    // fixed header near either edge of its visibility band.
+    root.style.setProperty(
+      "--composite-visibility",
+      (scene.groups.composite < HIDE_THRESHOLD ? 0 : 1).toFixed(3),
+    );
 
     applyLayers("boxModel", scene.boxLayers);
     applyLayers("paint", scene.paintLayers);

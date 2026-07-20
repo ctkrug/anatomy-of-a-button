@@ -496,6 +496,7 @@ body {
    keeps any future --explode-scale growth from reopening that failure. */
 .plane-group-composite {
   --explode-boost: 1.3125;
+  --composite-label-offset: 65px;
 }
 
 .plane-group-composite [data-layer="document"] .plane-face {
@@ -523,11 +524,17 @@ body {
    the top of the viewport, the same class of bug this whole group was
    rejected for, just on the label instead of the plane. */
 .plane-group-composite [data-layer="document"] .plane-label {
-  top: calc(50% - (65px * var(--explode-scale, 1) * var(--explode-boost, 1)));
+  top: calc(
+    50% -
+      (var(--composite-label-offset) * var(--explode-scale, 1) * var(--explode-boost, 1))
+  );
 }
 
 .plane-group-composite [data-layer="button"] .plane-label {
-  top: calc(50% + (65px * var(--explode-scale, 1) * var(--explode-boost, 1)));
+  top: calc(
+    50% +
+      (var(--composite-label-offset) * var(--explode-scale, 1) * var(--explode-boost, 1))
+  );
 }
 
 /*
@@ -883,7 +890,7 @@ body {
  */
 @media (max-width: 599px) {
   .scene {
-    transform: scale(0.8);
+    transform: translateY(calc(94px * var(--composite-visibility, 0))) scale(0.8);
   }
 
   /* At phone width the centred hero column rides high enough to reach the
@@ -894,19 +901,20 @@ body {
     padding-top: calc(var(--space-8) + var(--space-6));
   }
 
-  /* The composite stage's annotation copy is the longest in the sequence;
-     since .stage's flex column centers as one group, that extra text height
-     pushes .scene higher than it sits for any other stage, leaving less
-     headroom above the deck. Left at the desktop offset, the "document
-     layer" label's top edge lands above y:0 and is clipped by .stage's own
-     overflow: hidden (confirmed via a real 390x844 render). Halving it here
-     keeps the label on-screen without touching the desktop/tablet reading. */
-  .plane-group-composite [data-layer="document"] .plane-label {
-    top: calc(50% - (32px * var(--explode-scale, 1) * var(--explode-boost, 1)));
+  .stage-aside {
+    transform: translateY(calc(33px * var(--composite-visibility, 0)));
   }
 
-  .plane-group-composite [data-layer="button"] .plane-label {
-    top: calc(50% + (32px * var(--explode-scale, 1) * var(--explode-boost, 1)));
+  /* The composite annotation is the sequence's longest, so flex centering
+     otherwise pushes its deck into the fixed header. Once composite planes
+     paint, reserve a header-sized visual offset for the scene and a smaller
+     offset for its copy, then widen the label spread from 32px to 48px. The
+     latter restores the phone frame's visual weight without bringing the
+     document label back above the viewport. The renderer holds this value at
+     one for the complete visible fade band, so a partially faded label cannot
+     drift back through the header on its way out. */
+  .plane-group-composite {
+    --composite-label-offset: calc(32px + (16px * var(--composite-visibility, 0)));
   }
 }
 
