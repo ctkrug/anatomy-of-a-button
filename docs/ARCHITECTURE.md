@@ -89,10 +89,14 @@ has no memory of direction, so scrolling up produces exactly the frames scrollin
   ± Npx)` offset uses a *larger*, independently-tuned base (65px, vs. box/paint's 24px) so the
   group still reads with visual weight — the label offset is a plain 2D position, not a
   perspective-projected `translate3d`, so it can carry weight the z-boost no longer safely can.
-  A phone-width (`max-width: 599px`) override halves that base further: the composite stage's
-  annotation copy is the sequence's longest, and since `.stage`'s flex column centers as one
-  group, that pushes `.scene` higher on narrow viewports than any other stage, leaving less
-  headroom before the label's top edge hits `.stage`'s own `overflow: hidden`.
+  At phone width, `renderer.js` exposes `--composite-visibility`: it is one for the whole span
+  in which the composite group is painted and zero only after it is removed from the compositor.
+  CSS uses it to reserve 94px above the composite scene and 33px above its annotation column,
+  keeping the group clear of the fixed header across its complete fade band. The phone label base
+  rises from 32px to 48px while visible; only the *unpromoted* lower label reaches 86px, which
+  gives the intentionally shared-depth comparison enough silhouette without pretending it has a
+  GPU-layer z gap. This is deliberately held until the group is `display:none`: scaling the
+  offset with opacity caused the fading document label to drift back through the header.
   Below 1024px, `.scene` and `.annotations` stack in normal flow instead of sitting in separate
   grid columns; `.scene`'s own layout box is only the deck's small footprint, so it gets a
   `margin-bottom` scaled by `--explode-scale` to clear the exploded planes that visually overflow
@@ -130,14 +134,15 @@ found a grid auto-placement bug, a self-referencing custom property that silentl
 distinct off-screen label/plane clipping bugs, and a promoted composite layer magnified ~2.6x
 past a 1400px `perspective` and pushed entirely off screen, none of which a passing test suite or
 a `scrollWidth` overflow check surfaced; only rendered screenshots did. `npm run test:e2e`
-(`test/e2e/`) now codifies the composite-geometry case permanently so it can't silently regress
-again, but it is not a substitute for a fresh manual pass on a genuinely new layout change — it
-only re-checks the specific geometry it was written against.
+(`test/e2e/`) now codifies the composite geometry at both 1440×900 and 390×844, including every
+visible-band sample with promotion off and on. It asserts viewport containment, header clearance,
+and a minimum unpromoted phone silhouette. It is not a substitute for a fresh manual pass on a
+genuinely new layout change — it only re-checks the specific geometry it was written against.
 
 One caveat worth carrying forward, learned the hard way (see `docs/BACKLOG.md` Epic 6): "fully
 inside the viewport" is a weaker check than it sounds. It says nothing about what an element
 lands *on top of*. `.site-header` is `position: fixed; z-index: 10`, so a plane label can sit at
 a perfectly legal y 15, pass every containment assertion, and still be painted over by the
-header's own GitHub link. A layout check on this page needs to assert intersection against the
-header's boxes as well as against the viewport's, and to run at 390x844, not only at the
-1440x900 the e2e project currently defines.
+header's own GitHub link. The E2E guard now asserts non-intersection against both interactive
+header boxes at 390×844 as well as at desktop width; future layout checks should preserve that
+stronger contract rather than testing viewport bounds alone.
