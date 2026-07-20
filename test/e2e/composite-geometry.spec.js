@@ -80,6 +80,14 @@ test("composite group stays fully on screen, unpromoted", async ({ page }) => {
   await scrollToComposite(page);
   const box = await compositeBoundingBox(page);
   expectOnScreen(box, page.viewportSize());
+
+  if (page.viewportSize().width < 600) {
+    // The unpromoted view deliberately shares one z depth, but its labels
+    // should still give it enough silhouette to read beside the phone's box
+    // and paint frames rather than collapsing into a narrow header-adjacent
+    // strip.
+    expect(box.bottom - box.top).toBeGreaterThanOrEqual(180);
+  }
 });
 
 test("promoting the button layer separates it without clipping it off screen", async ({
