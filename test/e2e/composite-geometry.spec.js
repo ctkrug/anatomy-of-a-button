@@ -95,6 +95,7 @@ test("promoting the button layer separates it without clipping it off screen", a
 }) => {
   await page.goto("/");
   await scrollToComposite(page);
+  await expect(page.locator(".promote-toggle")).toHaveAttribute("tabindex", "0");
 
   const before = await compositeBoundingBox(page);
 
