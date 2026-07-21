@@ -13,7 +13,9 @@ let progress = 0;
 let promoted = false;
 
 function draw() {
-  render(computeScene(progress, { promoted }));
+  const scene = computeScene(progress, { promoted });
+  promoteToggle?.setAttribute("tabindex", scene.stageId === "composite" ? "0" : "-1");
+  render(scene);
 }
 
 attachPinProgress(sequence, (value) => {
