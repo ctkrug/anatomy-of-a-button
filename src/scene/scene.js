@@ -116,12 +116,10 @@ export function computeScene(progress, options = {}) {
     boxLayers: BOX_LAYERS.map((layer) => ({
       ...layer,
       z: scaleBy(layer.depth, separation.boxModel),
-      opacity: groups.boxModel,
     })),
     paintLayers: PAINT_LAYERS.map((layer) => ({
       ...layer,
       z: scaleBy(layer.depth, separation.paint),
-      opacity: groups.paint,
     })),
     compositeLayers: COMPOSITE_LAYERS.map((layer) => ({
       ...layer,
@@ -131,7 +129,6 @@ export function computeScene(progress, options = {}) {
         layer.id === "button" && !promoted ? SHARED_LAYER_DEPTH : layer.depth,
         separation.composite,
       ),
-      opacity: groups.composite,
     })),
     annotations: STAGES.map((stage, index) => ({
       id: stage.id,
