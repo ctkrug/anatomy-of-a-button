@@ -58,7 +58,7 @@ export const PAINT_LAYERS = [
   { id: "shadow", label: "box-shadow", note: "drawn first, outside the box", depth: -105 },
   { id: "background", label: "background", note: "fills the padding box", depth: -35 },
   { id: "border", label: "border", note: "drawn over the background edge", depth: 35 },
-  { id: "text", label: "text", note: "always last — nothing can cover it", depth: 105 },
+  { id: "text", label: "text", note: "always last; nothing can cover it", depth: 105 },
 ];
 
 /** The two compositor layers the promotion toggle compares. */
