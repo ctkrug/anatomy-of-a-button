@@ -96,3 +96,17 @@ group still reads with weight, phone width given a further reduction to keep the
 `.stage`'s `overflow: hidden`). Re-measured post-fix: promoted 93.1vh, unpromoted 48.7vh, neither
 clipped, at 1440x900. An earlier note here claimed "dom/box/paint/composite measure 50-82vh";
 that did not reproduce for composite either before or after this fix and remains corrected.
+
+## Closeout verification
+
+The final ship-gate pass on 2026-07-21 rendered and inspected the resting and composite frames
+at 390×844, 768×900, and 1440×900 in Chromium. The stage fills each viewport, the blueprint
+grid carries to every edge, no horizontal overflow appears, and the composite planes and labels
+stay inside the viewport and clear of the fixed header with promotion off and on. The 768×900
+check found and closed a shorter-tablet clipping gap that the earlier 768×1024 pass missed.
+
+Keyboard focus is visible on the header links, subject button, composite toggle, CTA, and footer
+link. The hidden composite toggle leaves the tab order until its stage is active, and every link
+and button measures at least 44×44px. The Space Grotesk and IBM Plex Mono hierarchy, typographic
+wordmark, cyan monogram favicon, sharp controls, grid atmosphere, and orange callouts remain one
+consistent blueprint system from the interactive hero through the explainer and footer.
