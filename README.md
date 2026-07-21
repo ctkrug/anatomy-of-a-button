@@ -1,6 +1,6 @@
 # Cutaway
 
-**▶ Live demo — [apps.charliekrug.com/anatomy-of-a-button](https://apps.charliekrug.com/anatomy-of-a-button/)**
+**▶ Live demo: [apps.charliekrug.com/anatomy-of-a-button](https://apps.charliekrug.com/anatomy-of-a-button/)**
 
 [![CI](https://github.com/ctkrug/anatomy-of-a-button/actions/workflows/ci.yml/badge.svg)](https://github.com/ctkrug/anatomy-of-a-button/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -13,6 +13,15 @@ apart. Scroll back and it reassembles. The button on the page is a real, focusab
 `<button>`, and every plane that separates out of it is measured from that same element.
 
 ![The paint stage: one button separated into box-shadow, background, border, and text layers, floating apart in 3D over a blueprint grid with redline callouts](docs/screenshot.png)
+
+## Use the explainer
+
+1. Open the live demo and scroll to scrub through the pipeline. The sequence follows the exact
+   scroll position, so scrolling upward reconstructs the same frames in reverse.
+2. Stop at **04 · composite** and switch on **promote to its own GPU layer**. The button texture
+   lifts away from the shared document layer while the note explains the memory trade-off.
+3. Keep scrolling to reassemble the original button, then read the plain-language stage notes
+   below the interactive sequence.
 
 ## Who it's for
 
@@ -56,16 +65,26 @@ the button returns to rest with no reset step.
 - [Vitest](https://vitest.dev/) for unit tests, [Playwright](https://playwright.dev/) for
   real-browser geometry checks, [ESLint](https://eslint.org/) for linting.
 
-## Development
+## Run it locally
 
 ```sh
-npm install
-npm run dev       # local dev server
+git clone https://github.com/ctkrug/anatomy-of-a-button.git
+cd anatomy-of-a-button
+npm ci
+npm run dev
+```
+
+Vite prints the local URL. Open it in a browser, then use the same scroll and promote-toggle
+interaction as the live page.
+
+## Quality commands
+
+```sh
 npm test          # run the test suite
 npm run coverage  # run the suite with a coverage report
 npm run test:e2e  # real-browser checks (Playwright) for CSS 3D-transform geometry
 npm run lint      # lint the source
-npm run build     # produce the static production build in dist/
+npm run build     # produce the static production build
 ```
 
 ## Deployment
