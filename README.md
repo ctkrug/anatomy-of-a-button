@@ -89,7 +89,7 @@ npm run build     # produce the static production build
 
 ## Deployment
 
-`npm run build` produces a self-contained static site in `dist/` using relative asset paths
+`npm run build` produces the committed static site in `site/` using relative asset paths
 only, so it hosts at a domain root or in a subpath such as
 `apps.charliekrug.com/anatomy-of-a-button` with no backend.
 
