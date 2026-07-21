@@ -73,6 +73,12 @@ bug was in the CSS that turns those numbers into pixels. I ended up driving a re
 and measuring the actual bounding boxes, which found three more layout bugs the size increase
 had exposed and I'd never have seen from unit tests or a quick glance.
 
+The last one was a useful warning about responsive labels. A 768x1024 tablet check passed, but
+the required 768x900 viewport put the composite label 52 pixels above the top edge. The width
+was not the problem; the shorter height changed how the scene and its long annotation shared
+the pinned stage. I added 768x900 to the Playwright matrix and shifted only the visible
+composite scene, leaving the other stages centered.
+
 Test the pure logic in isolation, absolutely. But if the output is *visual*, at some point you
 have to open the browser and measure the pixels. "The tests pass" and "it looks right" are
 different claims, and I'd been treating them as the same one.
