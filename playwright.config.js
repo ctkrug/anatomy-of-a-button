@@ -10,8 +10,8 @@ import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "./test/e2e",
   webServer: {
-    // Rebuilds first: `vite preview` only serves whatever is already in
-    // dist/, so a stale build would silently test yesterday's CSS.
+    // Rebuild first: `vite preview` serves the existing site/ output, so a
+    // stale build would silently test yesterday's CSS.
     command: "npm run build && npm run preview -- --port 4310 --strictPort",
     url: "http://localhost:4310",
     reuseExistingServer: !process.env.CI,
