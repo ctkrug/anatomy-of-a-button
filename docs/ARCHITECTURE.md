@@ -112,12 +112,12 @@ has no memory of direction, so scrolling up produces exactly the frames scrollin
 - `npm run coverage` — `vitest run --coverage` (v8 provider); core logic and render modules run
   at 100% line and function coverage.
 - `npm run test:e2e` — `playwright test` (`test/e2e/`, `playwright.config.js`); real-Chromium
-  geometry checks for CSS 3D-transform behavior jsdom can't lay out. Builds and serves `dist/`
+  geometry and responsive-shell checks at 390, 768, and 1440px. It builds and serves `site/`
   first, so it's checking the actual production output, not the dev server.
 - `npm run lint` — ESLint over `src/` and `test/`.
-- `npm run build` — static production build into `dist/`, relative-path (`base: "./"`) so it's
+- `npm run build` — static production build into `site/`, relative-path (`base: "./"`) so it's
   deployable to a subpath (`apps.charliekrug.com/anatomy-of-a-button`) with no server.
-- `npm run preview` — serves the built `dist/` locally.
+- `npm run preview` — serves the built `site/` locally.
 
 ## Testing notes
 
@@ -134,9 +134,10 @@ found a grid auto-placement bug, a self-referencing custom property that silentl
 distinct off-screen label/plane clipping bugs, and a promoted composite layer magnified ~2.6x
 past a 1400px `perspective` and pushed entirely off screen, none of which a passing test suite or
 a `scrollWidth` overflow check surfaced; only rendered screenshots did. `npm run test:e2e`
-(`test/e2e/`) now codifies the composite geometry at both 1440×900 and 390×844, including every
-visible-band sample with promotion off and on. It asserts viewport containment, header clearance,
-and a minimum unpromoted phone silhouette. It is not a substitute for a fresh manual pass on a
+(`test/e2e/`) now codifies the composite geometry at 1440×900, 768×900, and 390×844, including
+every visible-band sample with promotion off and on. It asserts viewport containment, header
+clearance, 44px control targets, visible focus, and a minimum unpromoted phone silhouette. It is
+not a substitute for a fresh manual pass on a
 genuinely new layout change — it only re-checks the specific geometry it was written against.
 
 One caveat worth carrying forward, learned the hard way (see `docs/BACKLOG.md` Epic 6): "fully
