@@ -933,7 +933,10 @@ body {
 
 @media (min-width: 600px) and (max-width: 1023px) {
   .scene {
-    transform: scale(0.85);
+    /* The composite labels extend farther above the deck than the other
+       groups. Reserve enough headroom at tablet height without shifting the
+       resting and earlier stages away from the viewport centre. */
+    transform: translateY(calc(72px * var(--composite-visibility, 0))) scale(0.85);
   }
 }
 
