@@ -22,8 +22,6 @@ technical explainers.
 | `--text-muted` | `#7fa8c9` | Secondary text, annotations |
 | `--accent` | `#4fd1e8` | Structural "ink" — lines, DOM/box-model diagrams, focus rings |
 | `--accent-support` | `#ff8a5c` | Redline callouts — annotations, highlighted measurements |
-| `--success` | `#6bcf7f` | Positive/valid states |
-| `--danger` | `#ff6b6b` | Error states |
 
 - **Type pairing:** Display — **Space Grotesk** (700, geometric, technical) for the wordmark
   and headings. UI/body — **IBM Plex Mono** (400/500) for annotations, labels, and body copy,
