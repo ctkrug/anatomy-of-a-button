@@ -54,7 +54,7 @@ body {
  * No overflow-x: hidden here (or on any ancestor of .stage): setting only
  * overflow-x implicitly computes overflow-y as auto, which turns the
  * element into a scroll container and breaks position: sticky on every
- * descendant. html's own overflow-x below is the only safe place for it.
+ * descendant. Keep wide scene geometry contained inside .stage instead.
  */
 #app {
   max-width: 100vw;
