@@ -23,6 +23,9 @@ describe("main entry point", () => {
 
     const deck = document.querySelector("[data-deck]");
     expect(deck.style.getPropertyValue("--deck-scale")).not.toBe("");
+
+    const toggle = document.querySelector("[data-promote-toggle]");
+    expect(toggle.tabIndex).toBe(-1);
   });
 
   it("flips aria-pressed on the promote toggle when clicked", async () => {
