@@ -1,6 +1,6 @@
 {
   "name": "anatomy-of-a-button",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "See one HTML button become DOM structure, boxes, paint, and GPU layers.",
