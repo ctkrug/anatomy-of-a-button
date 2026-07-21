@@ -1,21 +1,20 @@
 # Vision
 
-## Name and positioning
+## Audience and positioning brief
 
-The product ships as **Cutaway**, tagline **"See the render pipeline inside one button."**
+Cutaway is for front-end developers who write `<button>` every day but still know the browser's
+render pipeline mainly as prose or boxes and arrows. It replaces that abstract explanation with
+one concrete picture: a real button coming apart into DOM structure, box model, paint order, and
+compositor layers at the reader's own scroll speed.
 
-*Cutaway* is the term technical illustrators use for a drawing that opens an object up to show
-its internals, which is literally what this page does to a `<button>`. It was chosen over the
-descriptive working title ("Anatomy of a Button") because that title only restates the repo
-slug, and over coined alternatives because the real word already carries the meaning and suits
-the blueprint direction in `docs/DESIGN.md`.
+## Name and voice
 
-The audience is narrower than "web developers": front-end developers who write `<button>` every
-day and have never watched what the browser does with it. The specific pain is that the render
-pipeline is taught as prose and as boxes-and-arrows diagrams, so you can read "layout, paint,
-composite" a dozen times and still have no picture attached to it. The single benefit every
-headline leads with is that you watch one real button come apart into every stage, at your own
-scroll speed.
+The product ships as **Cutaway**, with the tagline **"See the render pipeline inside one
+button."** *Cutaway* is the technical-illustration term for a drawing that opens an object to
+show its internals, which is exactly what the page does to a `<button>`. The name carries the
+meaning without repeating the repository slug and fits the blueprint direction in
+`docs/DESIGN.md`. The copy is plain, technically specific, and slightly wry. It avoids hype and
+backs each claim with something the reader can see in the sequence.
 
 The wordmark and the piece's own title are deliberately different things: Cutaway is the
 product, "// anatomy of a Button" is the headline of this piece, the way a publication name and
@@ -24,9 +23,9 @@ an article title coexist. Both sit in one visual language.
 ## The problem
 
 Every web developer has typed `<button>Click me</button>` and moved on. What that one line
-actually costs the browser — building a DOM node, resolving styles, computing a box, painting
-pixels, promoting layers, and compositing them on the GPU — is invisible by design. That
-invisibility is good for shipping software and bad for understanding it: developers debug
+actually costs the browser, from building a DOM node through layout, paint, and compositing, is
+invisible by design. That invisibility is good for shipping software and bad for understanding
+it: developers debug
 layout thrashing, jank, and "why did this repaint" issues with only a hazy mental model of the
 pipeline underneath.
 
@@ -35,34 +34,27 @@ but static prose walls) or superficial "here's how browsers work" diagrams (appr
 too shallow to build real intuition). Nothing lets you *feel* the pipeline by directly
 manipulating it.
 
-## Who it's for
-
-Web developers and computer-curious learners who are comfortable with HTML/CSS basics and want
-their mental model of "what happens after I hit save" to go from hand-wavy to concrete. Not
-aimed at browser engine implementers — aimed at the much larger audience of people who use the
-platform daily and have never seen its insides.
-
 ## The core idea
 
-One button. One continuous scroll. The button never changes what it *is* — it changes how much
+One button. One continuous scroll. The button never changes what it *is*; it changes how much
 of its own machinery is visible around it as you scroll:
 
-1. **It's just a button.** The familiar, boring gray rectangle everyone has seen a million
+1. **It's just a button.** The familiar rectangle everyone has seen a million
    times, sitting at rest.
 2. **The DOM.** The button is revealed to be a node in a tree, with siblings and a parent,
    because rendering starts with structure, not pixels.
 3. **The box model.** Content, padding, border, and margin expand outward into a 3D-ish
-   exploded view — the box the button actually occupies is bigger and more structured than the
+   exploded view. The box the button actually occupies is bigger and more structured than the
    rectangle you see.
-4. **Paint.** The box separates into distinct painted layers — background, border, text,
-   shadow — each rendered independently before they're flattened together.
+4. **Paint.** The box separates into distinct painted layers: background, border, text, and
+   shadow. Each is rendered independently before they are flattened together.
 5. **Compositing & GPU layers.** The layers lift further apart and are shown compositing on the
    GPU, with a nod to *why* (`transform`, `opacity`, `will-change`) some elements get their own
    layer and what that trade-off buys and costs.
-6. **Recomposition.** Everything snaps back together into the exact same boring gray button
-   you started with — and it should no longer look boring.
+6. **Recomposition.** Everything snaps back together into the exact same button
+   you started with, and it should no longer look boring.
 
-The scroll position is the only input. There's no "next" button, no separate slides — one
+The scroll position is the only input. There is no "next" button and no separate slides, just one
 continuous, reversible scrub through the pipeline, so the relationship between "how far you've
 scrolled" and "how deep into the rendering pipeline you are" is direct and physical.
 
@@ -74,7 +66,7 @@ scrolled" and "how deep into the rendering pipeline you are" is direct and physi
 - **SVG for structure, CSS 3D transforms for every exploded layer.** The DOM tree is a
   DOM-adjacent structural diagram (SVG suits this). Box-model/paint/composite layers turned out
   not to need Canvas: `translate3d`/`rotateX`/`rotateZ` planes are real, independently
-  GPU-composited layers driven by scroll-scrubbed custom properties — which is more honest to
+  GPU-composited layers driven by scroll-scrubbed custom properties. That is more honest to
   the compositing section's own subject matter than simulating layers on a raster canvas would
   be, and keeps every frame a style write with no per-frame redraw logic of its own.
 - **No framework.** A framework's own virtual-DOM/render pipeline would sit awkwardly under a
@@ -94,6 +86,6 @@ scrolled" and "how deep into the rendering pipeline you are" is direct and physi
 - Each stage has a short, plain-language annotation explaining what's being shown and why it
   matters in practice (not just a label on a diagram).
 - Works smoothly on a real desktop browser and doesn't break on a phone-width viewport (reflows
-  to a stacked, still-legible layout — full parity with desktop motion isn't required).
+  to a stacked, still-legible layout; full parity with desktop motion is not required).
 - Ships as a static build with relative asset paths, deployable to a subpath with no server.
-- No placeholder copy, no TODO diagrams — every stage in the sequence is real, not stubbed.
+- No placeholder copy or TODO diagrams. Every stage in the sequence is real, not stubbed.
