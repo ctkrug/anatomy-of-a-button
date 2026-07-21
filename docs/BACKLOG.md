@@ -189,3 +189,19 @@ reproducible at 768x1024 or 1440x900, where the group clears the header.
   - [x] The e2e suite runs the composite checks at 390x844 as well as 1440x900.
   - [x] A test asserts no plane/label intersects the header's interactive boxes, in both
         promote states, at seven samples spanning the full visible band.
+
+## Epic 7: Final responsive and accessibility closeout
+
+The final D4 pass added the required 768×900 viewport to Playwright. That shorter tablet
+height exposed a composite label at y -52 even though the earlier 768×1024 check passed.
+
+- [x] **7.1: Keep the composite frame inside a 768×900 viewport.** The tablet scene now shifts
+      down 72px only while the composite group is visible. Rest, DOM, box, and paint keep their
+      centered composition.
+- [x] **7.2: Give every link and button a 44px target.** The header wordmark, GitHub link, and
+      portfolio footer link now meet the touch-target floor alongside the existing buttons.
+- [x] **7.3: Remove the hidden GPU toggle from keyboard order.** Its `tabindex` is `-1` outside
+      the composite stage and returns to `0` when the control is visible.
+- [x] **7.4: Guard the responsive shell in Chromium.** The E2E matrix now runs at 390×844,
+      768×900, and 1440×900 and checks viewport composition, horizontal overflow, favicon,
+      touch-target size, focus treatment, and composite geometry.
