@@ -78,8 +78,8 @@ criteria — a later run should be able to check each one true/false without gue
   - Every interactive control has a visible focus state, and body text meets ≥4.5:1 contrast.
 - [x] **4.3 — Verify the static build is subpath-deployable.**
   - `npm run build` output references only relative asset paths (no leading `/`).
-  - The built `dist/` renders correctly when served from a non-root path locally (e.g. a local
-    static server rooted one directory above `dist/`).
+  - The built `site/` renders correctly when served from a non-root path locally (e.g. a local
+    static server rooted one directory above `site/`).
 - [x] **4.4 — Design polish: full sequence review.**
   - A full scroll-through at 390px, 768px, and 1440px shows no anti-generic-ban violations
     (§D2 of the design standard) anywhere in the sequence.
