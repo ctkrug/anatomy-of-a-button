@@ -5,7 +5,7 @@ export default defineConfig({
   // (e.g. apps.charliekrug.com/anatomy-of-a-button), not just at a domain root.
   base: "./",
   build: {
-    outDir: "dist",
+    outDir: "site",
   },
   test: {
     environment: "jsdom",
