@@ -90,6 +90,17 @@ test("composite group stays fully on screen, unpromoted", async ({ page }) => {
   }
 });
 
+test("refreshing mid-sequence restores the scroll-derived stage", async ({ page }) => {
+  await page.goto("/");
+  await scrollToComposite(page);
+  await expect(page.locator(".stage")).toHaveAttribute("data-stage", "composite");
+
+  await page.reload();
+
+  await expect(page.locator(".stage")).toHaveAttribute("data-stage", "composite");
+  await expect(page.locator(".promote-toggle")).toHaveAttribute("tabindex", "0");
+});
+
 test("promoting the button layer separates it without clipping it off screen", async ({
   page,
 }) => {
